@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>8433087820-ss4d7u35gsvpk5gk921mtp6lbcassidd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.8433087820-ss4d7u35gsvpk5gk921mtp6lbcassidd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBlrWMiIH3JA-YnfLDlRf9GUexI1NQFsmw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>8433087820</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.sigma.Catering-App</string>
+	<key>PROJECT_ID</key>
+	<string>dima-pet-project</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dima-pet-project.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:8433087820:ios:f8e2343c9304aa954d0be9</string>
+	<key>DATABASE_URL</key>
+	<string>https://dima-pet-project-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>
