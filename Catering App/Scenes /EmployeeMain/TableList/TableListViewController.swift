@@ -21,7 +21,10 @@ class TableListViewController: UIViewController {
         make()
         makeStyle()
         makeConstraints()
-        firebaseQueryManager.getActiveTableList(for: tableView)
+        
+        firebaseQueryManager.getActiveTableList {
+            self.tableView.reloadData()
+        }
     }
     
     func setTableViewDelegateAndDataSource() {
@@ -68,10 +71,11 @@ class TableListViewController: UIViewController {
     
     @objc func createTable() {
         firebaseQueryManager.addToActiveTablelist()
-        firebaseQueryManager.getActiveTableList(for: tableView)
-        tableView.reloadData()
+        firebaseQueryManager.getActiveTableList {
+            self.tableView.reloadData()
+        }
+        
     }
-    
 
 }
 
@@ -96,8 +100,10 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             let current = firebaseQueryManager.activeTableList[indexPath.row]
-            firebaseQueryManager.deleteFromActiveTableList(qrToDelete: current)
-            firebaseQueryManager.getActiveTableList(for: tableView)
+            firebaseQueryManager.deleteFromActiveTableList(qrIDtoDelete: current.id)
+            firebaseQueryManager.getActiveTableList {
+                self.tableView.reloadData()
+            }
         }
     }
     

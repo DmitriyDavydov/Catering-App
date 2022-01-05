@@ -15,8 +15,8 @@ class FirebaseQueryManager {
     var activeTableList = [QRCode]()
     var database = Firestore.firestore()
     
-    func deleteFromActiveTableList(qrToDelete: QRCode) {
-        self.database.collection("qr_codes").document(qrToDelete.id).delete()
+    func deleteFromActiveTableList(qrIDtoDelete: String) {
+        self.database.collection("qr_codes").document(qrIDtoDelete).delete()
     }
     
     func addToActiveTablelist() {
@@ -31,7 +31,7 @@ class FirebaseQueryManager {
         }
     }
     
-    func getActiveTableList(for tableView: UITableView) {
+    func getActiveTableList(completion: @escaping () -> ()) {
         self.database.collection("qr_codes").getDocuments { snapshot, error in
             
             if error == nil {
@@ -42,14 +42,13 @@ class FirebaseQueryManager {
                         return QRCode(id: document.documentID,
                                       tableID: document["table_id"] as? String ?? "")
                     }
-                    tableView.reloadData()
+                    completion()
                     
                 }
-                
-            } else {
                 
             }
         }
         
     }
+    
 }
