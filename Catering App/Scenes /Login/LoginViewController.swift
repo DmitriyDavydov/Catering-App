@@ -67,8 +67,6 @@ class LoginViewController: UIViewController {
         loginButton.setTitleColor(.black, for: .normal)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
-        
-
     }
     
     func makeConstraints() {
@@ -93,16 +91,13 @@ class LoginViewController: UIViewController {
         loginButton.topAnchor.constraint(equalTo: textFieldsStack.bottomAnchor, constant: 50).isActive = true
         loginButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
         loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 75).isActive = true
-        
     }
     
     @objc func backButtonPressed() {
-        print("back button pressed")
         dismiss(animated: true)
     }
     
     @objc func loginButtonPressed() {
-        print("login button pressed")
         firebaseAuthManager.login(loginEmail: emailTextField.text!,
                                   loginPassword: passwordTextField.text!,
                                   loginViewController: self)

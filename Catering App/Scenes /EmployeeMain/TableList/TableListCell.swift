@@ -26,8 +26,8 @@ class TableListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(data: String) {
-        cellTitle.text = "Table: " + data
+    func set(tableNumber: Int, tableID: String) {
+        cellTitle.text = "Table \(tableNumber): \(tableID)"
     }
 
     func makeStyle() {

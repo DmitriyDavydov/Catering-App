@@ -10,6 +10,7 @@ import UIKit
 class TableListViewController: UIViewController {
     
     let firebaseQueryManager = FirebaseQueryManager()
+    
     let backgroundView = UIView()
     let tableView = UITableView()
     let createButton = UIButton()
@@ -82,8 +83,9 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableListCell", for: indexPath) as! TableListCell
-        let data = firebaseQueryManager.activeTableList[indexPath.row].tableID
-        cell.set(data: data)
+        let tableID = firebaseQueryManager.activeTableList[indexPath.row].tableID
+        let tableNumber = indexPath.row
+        cell.set(tableNumber: tableNumber, tableID: tableID)
         return cell
     }
     
