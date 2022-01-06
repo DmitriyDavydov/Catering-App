@@ -15,21 +15,25 @@ class FirebaseQueryManager {
     var activeTableList = [QRCode]()
     var database = Firestore.firestore()
     
+    
     func deleteFromActiveTableList(qrIDtoDelete: String) {
         self.database.collection("qr_codes").document(qrIDtoDelete).delete()
     }
     
-    func addToActiveTablelist() {
-        let randomID = Int.random(in: 1...999)
-        self.database.collection("qr_codes").addDocument(data: ["table_id" : "\(randomID)"]) { error in
+
+    func addToActiveTablelist(completion: @escaping (String) -> ()) {
+        var ref: DocumentReference? = nil
+        ref = database.collection("qr_codes").addDocument(data: ["table_id" : "12345"]) { error in
             
             if error == nil {
-                print("Document has been successfully added")
+                print("Document has been successfully added with id: \(ref!.documentID)")
+                completion(ref!.documentID)
             } else {
                 print("ERROR: Document has not been added")
             }
         }
     }
+
     
     func getActiveTableList(completion: @escaping () -> ()) {
         self.database.collection("qr_codes").getDocuments { snapshot, error in

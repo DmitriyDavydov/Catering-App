@@ -24,15 +24,12 @@ class EmployeeMainViewController: UIViewController {
         
         let sampleVC = UIViewController()
         sampleVC.title = "Sample VC"
-
         
-        let anotherVC = UIViewController()
-        anotherVC.title = "another VC"
-        anotherVC.view.backgroundColor = .yellow
+        let anotherVC = QRcodeTestViewController()
+        anotherVC.title = "QR test VC"
         
         let tableListViewController = TableListViewController()
         tableListViewController.title = "Table List"
-        //tableListViewController.view.backgroundColor = .white
         
         bottomNavigationController.viewControllers = [sampleVC, anotherVC, tableListViewController]
         self.view.addSubview(bottomNavigationController.view)

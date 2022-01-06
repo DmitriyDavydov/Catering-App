@@ -70,7 +70,11 @@ class TableListViewController: UIViewController {
     }
     
     @objc func createTable() {
-        firebaseQueryManager.addToActiveTablelist()
+        var qrCodeID = String()
+        firebaseQueryManager.addToActiveTablelist { id in
+            qrCodeID = id
+        }
+        
         firebaseQueryManager.getActiveTableList {
             self.tableView.reloadData()
         }
