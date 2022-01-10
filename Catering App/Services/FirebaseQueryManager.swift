@@ -23,7 +23,7 @@ class FirebaseQueryManager {
 
     func addToActiveTablelist(completion: @escaping (String) -> ()) {
         var ref: DocumentReference? = nil
-        ref = database.collection("qr_codes").addDocument(data: ["table_id" : "12345"]) { error in
+        ref = database.collection("qr_codes").addDocument(data: ["qr_code_image_url" : ""]) { error in
             
             if error == nil {
                 print("Document has been successfully added with id: \(ref!.documentID)")
@@ -33,7 +33,7 @@ class FirebaseQueryManager {
             }
         }
     }
-
+    
     
     func getActiveTableList(completion: @escaping () -> ()) {
         self.database.collection("qr_codes").getDocuments { snapshot, error in
@@ -43,8 +43,8 @@ class FirebaseQueryManager {
                 if let snapshot = snapshot {
                     
                     self.activeTableList = snapshot.documents.map { document in
-                        return QRCode(id: document.documentID,
-                                      tableID: document["table_id"] as? String ?? "")
+                        return QRCode(autoID: document.documentID,
+                                      qrCodeImageURL: document["qr_code_image_url"] as? String ?? "")
                     }
                     completion()
                     
@@ -53,6 +53,21 @@ class FirebaseQueryManager {
             }
         }
         
+    }
+    
+    func updateURLfor(qrCodeID: String, with url: String) {
+        let ref = database.collection("qr_codes").document("\(qrCodeID)")
+        
+        ref.updateData([
+            "qr_code_image_url" : "\(url)"
+        ]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
+
     }
     
 }

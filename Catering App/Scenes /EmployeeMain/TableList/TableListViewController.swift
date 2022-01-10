@@ -6,15 +6,17 @@
 //
 
 import UIKit
+import FirebaseFirestoreSwift
 
 class TableListViewController: UIViewController {
     
     let firebaseQueryManager = FirebaseQueryManager()
+    let qrCodeGenerator = QRCodeGenerator()
     
     let backgroundView = UIView()
     let tableView = UITableView()
     let createButton = UIButton()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -70,9 +72,18 @@ class TableListViewController: UIViewController {
     }
     
     @objc func createTable() {
-        var qrCodeID = String()
         firebaseQueryManager.addToActiveTablelist { id in
-            qrCodeID = id
+            let qrCodeImage = self.qrCodeGenerator.generateQRCode(from: id)
+            
+            self.qrCodeGenerator.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage!) { (result) in
+                switch result {
+                case .success(let url):
+                    self.firebaseQueryManager.updateURLfor(qrCodeID: id, with: url.absoluteString)
+                case .failure(let error):
+                    print(error)
+                    
+                }
+            }
         }
         
         firebaseQueryManager.getActiveTableList {
@@ -80,7 +91,7 @@ class TableListViewController: UIViewController {
         }
         
     }
-
+    
 }
 
 extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -91,20 +102,20 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableListCell", for: indexPath) as! TableListCell
-        let tableID = firebaseQueryManager.activeTableList[indexPath.row].tableID
+        let documentAutoID = firebaseQueryManager.activeTableList[indexPath.row].autoID
         let tableNumber = indexPath.row
-        cell.set(tableNumber: tableNumber, tableID: tableID)
+        cell.set(tableNumber: tableNumber, documentID: documentAutoID)
         return cell
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             let current = firebaseQueryManager.activeTableList[indexPath.row]
-            firebaseQueryManager.deleteFromActiveTableList(qrIDtoDelete: current.id)
+            firebaseQueryManager.deleteFromActiveTableList(qrIDtoDelete: current.autoID)
             firebaseQueryManager.getActiveTableList {
                 self.tableView.reloadData()
             }

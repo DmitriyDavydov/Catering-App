@@ -8,6 +8,6 @@
 import Foundation
 
 struct QRCode {
-    let id: String
-    let tableID: String
+    let autoID: String
+    let qrCodeImageURL: String
 }
