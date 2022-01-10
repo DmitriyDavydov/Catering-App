@@ -20,7 +20,6 @@
 		45B82DF8277E009700A36ECF /* TableListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82DF7277E009700A36ECF /* TableListCell.swift */; };
 		45B82DFA2781DA0E00A36ECF /* FirebaseQueryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82DF92781DA0E00A36ECF /* FirebaseQueryManager.swift */; };
 		45B82E002781DF0800A36ECF /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82DFF2781DF0800A36ECF /* QRCode.swift */; };
-		45B82E0E2786E84400A36ECF /* QRcodeTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E0D2786E84400A36ECF /* QRcodeTestViewController.swift */; };
 		45B82E1227871AA000A36ECF /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E1127871AA000A36ECF /* QRCodeGenerator.swift */; };
 		45B82E15278C308200A36ECF /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E14278C308200A36ECF /* FirebaseAuth */; };
 		45B82E17278C308200A36ECF /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E16278C308200A36ECF /* FirebaseAuthCombine-Community */; };
@@ -30,6 +29,7 @@
 		45B82E1F278C308200A36ECF /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E1E278C308200A36ECF /* FirebaseStorage */; };
 		45B82E21278C308200A36ECF /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E20278C308200A36ECF /* FirebaseStorageCombine-Community */; };
 		45B82E23278C308200A36ECF /* FirebaseStorageSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E22278C308200A36ECF /* FirebaseStorageSwift-Beta */; };
+		45B82E28278C68BF00A36ECF /* UIImageView+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E27278C68BF00A36ECF /* UIImageView+Load.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,8 +48,8 @@
 		45B82DF7277E009700A36ECF /* TableListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableListCell.swift; sourceTree = "<group>"; };
 		45B82DF92781DA0E00A36ECF /* FirebaseQueryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseQueryManager.swift; sourceTree = "<group>"; };
 		45B82DFF2781DF0800A36ECF /* QRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
-		45B82E0D2786E84400A36ECF /* QRcodeTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRcodeTestViewController.swift; sourceTree = "<group>"; };
 		45B82E1127871AA000A36ECF /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
+		45B82E27278C68BF00A36ECF /* UIImageView+Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Load.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +90,7 @@
 		453FA7312774B56900978998 /* Catering App */ = {
 			isa = PBXGroup;
 			children = (
+				45B82E24278C512F00A36ECF /* Extensions */,
 				45B82DFE2781DEF100A36ECF /* Models */,
 				45B82DEA277DDD2E00A36ECF /* Services */,
 				45B82D92277B5B9200A36ECF /* Scenes  */,
@@ -144,7 +145,6 @@
 			children = (
 				45B82DEE277DE03500A36ECF /* EmployeeMainViewController.swift */,
 				45B82DF2277DFD6100A36ECF /* CurrentTables */,
-				45B82E0C2786E80D00A36ECF /* test */,
 				45B82DF3277DFD6F00A36ECF /* Menu */,
 				45B82DF4277DFD9000A36ECF /* TableList */,
 			);
@@ -182,12 +182,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		45B82E0C2786E80D00A36ECF /* test */ = {
+		45B82E24278C512F00A36ECF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				45B82E0D2786E84400A36ECF /* QRcodeTestViewController.swift */,
+				45B82E27278C68BF00A36ECF /* UIImageView+Load.swift */,
 			);
-			path = test;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -276,9 +276,9 @@
 			files = (
 				45B82DFA2781DA0E00A36ECF /* FirebaseQueryManager.swift in Sources */,
 				45B82E1227871AA000A36ECF /* QRCodeGenerator.swift in Sources */,
+				45B82E28278C68BF00A36ECF /* UIImageView+Load.swift in Sources */,
 				45B82DB0277DBFD400A36ECF /* LoginViewController.swift in Sources */,
 				45B82DEC277DDD5100A36ECF /* FirebaseAuthManager.swift in Sources */,
-				45B82E0E2786E84400A36ECF /* QRcodeTestViewController.swift in Sources */,
 				45B82DF8277E009700A36ECF /* TableListCell.swift in Sources */,
 				45B82D95277B5BBA00A36ECF /* InitialViewController.swift in Sources */,
 				45B82DEF277DE03500A36ECF /* EmployeeMainViewController.swift in Sources */,

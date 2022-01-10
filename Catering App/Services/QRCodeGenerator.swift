@@ -53,7 +53,16 @@ class QRCodeGenerator {
         
     }
     
-    
+    func deleteQRCode(qrCodeID: String) {
+        let ref = storage.reference().child("qr_codes").child(qrCodeID)
+
+        ref.delete { error in
+          if let error = error {
+            print(error)
+          }
+        }
+            
+    }
     
     
 }

@@ -79,17 +79,46 @@ class TableListViewController: UIViewController {
                 switch result {
                 case .success(let url):
                     self.firebaseQueryManager.updateURLfor(qrCodeID: id, with: url.absoluteString)
+                    self.firebaseQueryManager.getActiveTableList {
+                        self.tableView.reloadData()
+                    }
                 case .failure(let error):
                     print(error)
                     
                 }
             }
         }
+    }
+    
+    func invokeAlert(QRcodeURL: URL) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        let imageView = UIImageView()
+        imageView.load(url: QRcodeURL)
+        alert.view?.addSubview(imageView)
         
-        firebaseQueryManager.getActiveTableList {
-            self.tableView.reloadData()
-        }
+        let height = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 280)
+        let width = NSLayoutConstraint(item: alert.view!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 280)
+        alert.view.addConstraint(height)
+        alert.view.addConstraint(width)
         
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: alert.view.centerYAnchor).isActive = true
+        
+        
+        alert.addAction(UIAlertAction(title: "CANCEL", style: .default, handler: { action in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "SHARE", style: .default, handler: { action in
+            let imageToShare = [imageView.image!]
+            let activityViewController = UIActivityViewController(activityItems: imageToShare,
+                                                                  applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view
+            self.present(activityViewController, animated: true, completion: nil)
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
 }
@@ -119,7 +148,13 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
             firebaseQueryManager.getActiveTableList {
                 self.tableView.reloadData()
             }
+            qrCodeGenerator.deleteQRCode(qrCodeID: current.autoID)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let current = firebaseQueryManager.activeTableList[indexPath.row]
+        invokeAlert(QRcodeURL: URL(string: current.qrCodeImageURL)!)
     }
     
     

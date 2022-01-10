@@ -63,7 +63,7 @@ class LoginViewController: UIViewController {
         passwordTextField.textColor = .white
         passwordTextField.clearsOnBeginEditing = true
         
-        loginButton.setTitle("LOGIN", for: .normal)
+        loginButton.setTitle("SIGN IN", for: .normal)
         loginButton.setTitleColor(.black, for: .normal)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
