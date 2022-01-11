@@ -72,7 +72,31 @@ class TableListViewController: UIViewController {
     }
     
     @objc func createTable() {
-        firebaseQueryManager.addToActiveTablelist { id in
+        var positionsArray = [Int]()
+        var i = 1
+        
+        if firebaseQueryManager.activeTableList.isEmpty == true {
+            createTableInDatabase(tableNumber: 1)
+        } else {
+            firebaseQueryManager.activeTableList.forEach { qrCode in
+                positionsArray.append(qrCode.tableNumber)
+            }
+            
+            for _ in 0...positionsArray.count {
+                if positionsArray.contains(i) {
+                    i += 1
+                } else {
+                    createTableInDatabase(tableNumber: i)
+                    break
+                }
+            }
+            
+        }
+    }
+    
+    
+    func createTableInDatabase(tableNumber: Int) {
+        firebaseQueryManager.addToActiveTablelist(tableNumber: tableNumber) { id in
             let qrCodeImage = self.qrCodeGenerator.generateQRCode(from: id)
             
             self.qrCodeGenerator.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage!) { (result) in
@@ -88,6 +112,7 @@ class TableListViewController: UIViewController {
                 }
             }
         }
+        
     }
     
     func invokeAlert(QRcodeURL: URL) {
@@ -132,7 +157,7 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableListCell", for: indexPath) as! TableListCell
         let documentAutoID = firebaseQueryManager.activeTableList[indexPath.row].autoID
-        let tableNumber = indexPath.row
+        let tableNumber = firebaseQueryManager.activeTableList[indexPath.row].tableNumber
         cell.set(tableNumber: tableNumber, documentID: documentAutoID)
         return cell
     }
@@ -159,3 +184,5 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     
     
 }
+
+

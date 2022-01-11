@@ -10,4 +10,5 @@ import Foundation
 struct QRCode {
     let autoID: String
     let qrCodeImageURL: String
+    let tableNumber: Int
 }

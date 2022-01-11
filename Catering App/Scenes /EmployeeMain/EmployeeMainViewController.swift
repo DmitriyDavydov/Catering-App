@@ -25,13 +25,10 @@ class EmployeeMainViewController: UIViewController {
         let sampleVC = UIViewController()
         sampleVC.title = "Sample VC"
         
-        let anotherVC = QRcodeTestViewController()
-        anotherVC.title = "QR test VC"
-        
         let tableListViewController = TableListViewController()
         tableListViewController.title = "Table List"
         
-        bottomNavigationController.viewControllers = [sampleVC, anotherVC, tableListViewController]
+        bottomNavigationController.viewControllers = [sampleVC, tableListViewController]
         self.view.addSubview(bottomNavigationController.view)
     }
 
