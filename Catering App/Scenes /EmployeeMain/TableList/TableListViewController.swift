@@ -16,6 +16,7 @@ class TableListViewController: UIViewController {
     let backgroundView = UIView()
     let tableView = UITableView()
     let createButton = UIButton()
+    let activityIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,21 +30,10 @@ class TableListViewController: UIViewController {
         }
     }
     
-    func setTableViewDelegateAndDataSource() {
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-    func setupTableView() {
-        setTableViewDelegateAndDataSource()
-        backgroundView.addSubview(tableView)
-        tableView.register(TableListCell.self, forCellReuseIdentifier: "TableListCell")
-        tableView.separatorStyle = .singleLine
-    }
-    
     func make() {
         view.addSubview(backgroundView)
         backgroundView.addSubview(createButton)
+        backgroundView.addSubview(activityIndicator)
     }
     
     func makeStyle() {
@@ -55,6 +45,10 @@ class TableListViewController: UIViewController {
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         createButton.backgroundColor = .black
         createButton.addTarget(self, action: #selector(createTable), for: .touchUpInside)
+        
+        activityIndicator.color = .black
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.isHidden = true
     }
     
     func makeConstraints() {
@@ -69,14 +63,44 @@ class TableListViewController: UIViewController {
         createButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
         createButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         createButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.centerXAnchor.constraint(equalTo: createButton.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: createButton.centerYAnchor).isActive = true
+        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func setupTableView() {
+        setTableViewDelegateAndDataSource()
+        backgroundView.addSubview(tableView)
+        tableView.register(TableListCell.self, forCellReuseIdentifier: "TableListCell")
+        tableView.separatorStyle = .none
+    }
+    
+    func setTableViewDelegateAndDataSource() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    func showActivityIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        createButton.isHidden = true
+    }
+    
+    func hideActivityIndicator() {
+        activityIndicator.stopAnimating()
+        createButton.isHidden = false
     }
     
     @objc func createTable() {
+        showActivityIndicator()
         var positionsArray = [Int]()
         var i = 1
         
         if firebaseQueryManager.activeTableList.isEmpty == true {
-            createTableInDatabase(tableNumber: 1)
+            createTableInDatabase(tableNumber: 1) { return }
         } else {
             firebaseQueryManager.activeTableList.forEach { qrCode in
                 positionsArray.append(qrCode.tableNumber)
@@ -86,16 +110,18 @@ class TableListViewController: UIViewController {
                 if positionsArray.contains(i) {
                     i += 1
                 } else {
-                    createTableInDatabase(tableNumber: i)
+                    createTableInDatabase(tableNumber: i) {
+                        return
+                    }
                     break
                 }
+                
             }
-            
         }
+        
     }
-    
-    
-    func createTableInDatabase(tableNumber: Int) {
+        
+    func createTableInDatabase(tableNumber: Int, completion: @escaping () -> Void) {
         firebaseQueryManager.addToActiveTablelist(tableNumber: tableNumber) { id in
             let qrCodeImage = self.qrCodeGenerator.generateQRCode(from: id)
             
@@ -105,6 +131,7 @@ class TableListViewController: UIViewController {
                     self.firebaseQueryManager.updateURLfor(qrCodeID: id, with: url.absoluteString)
                     self.firebaseQueryManager.getActiveTableList {
                         self.tableView.reloadData()
+                        self.hideActivityIndicator()
                     }
                 case .failure(let error):
                     print(error)

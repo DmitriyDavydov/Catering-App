@@ -33,7 +33,6 @@ class TableListCell: UITableViewCell {
     func makeStyle() {
         cellBackground.backgroundColor = .lightGray
         cellTitle.numberOfLines = 0
-        self.accessoryType = .disclosureIndicator
     }
     
     func makeConstraints() {
