@@ -90,10 +90,10 @@
 		453FA7312774B56900978998 /* Catering App */ = {
 			isa = PBXGroup;
 			children = (
-				45B82E24278C512F00A36ECF /* Extensions */,
 				45B82DFE2781DEF100A36ECF /* Models */,
 				45B82DEA277DDD2E00A36ECF /* Services */,
 				45B82D92277B5B9200A36ECF /* Scenes  */,
+				45B82E24278C512F00A36ECF /* Extensions */,
 				453FA7322774B56900978998 /* AppDelegate.swift */,
 				453FA7342774B56900978998 /* SceneDelegate.swift */,
 				453FA73B2774B56D00978998 /* Assets.xcassets */,

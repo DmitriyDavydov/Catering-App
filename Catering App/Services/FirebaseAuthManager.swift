@@ -10,7 +10,7 @@ import FirebaseAuth
 
 
 class FirebaseAuthManager {
-    
+// MARK: login
     func login (loginEmail: String, loginPassword: String, loginViewController: LoginViewController) {
         
         if (!loginEmail.isEmpty && !loginPassword.isEmpty) {

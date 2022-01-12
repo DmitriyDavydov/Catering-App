@@ -8,7 +8,7 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-    
+    // MARK: properties
     let firebaseAuthManager = FirebaseAuthManager()
     
     let backgroundView = UIView()
@@ -18,7 +18,8 @@ class LoginViewController: UIViewController {
     let textFieldsStack = UIStackView()
     let loginButton = UIButton()
     let backButton = UIButton()
-
+    
+// MARK: properties
     override func viewDidLoad() {
         super.viewDidLoad()
         make()
@@ -26,6 +27,7 @@ class LoginViewController: UIViewController {
         makeConstraints()
     }
     
+// MARK: make
     func make() {
         view.addSubview(backgroundView)
         textFieldsStack.addArrangedSubview(emailTextField)
@@ -36,6 +38,7 @@ class LoginViewController: UIViewController {
         backgroundView.addSubview(backButton)
     }
     
+// MARK: makeStyle
     func makeStyle() {
         backgroundView.frame = view.bounds
         backgroundView.backgroundColor = .white
@@ -69,6 +72,7 @@ class LoginViewController: UIViewController {
         loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
     }
     
+// MARK: makeConstraints
     func makeConstraints() {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 50).isActive = true
@@ -93,10 +97,12 @@ class LoginViewController: UIViewController {
         loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 75).isActive = true
     }
     
+// MARK: backButtonPressed
     @objc func backButtonPressed() {
         dismiss(animated: true)
     }
     
+// MARK: loginButtonPressed
     @objc func loginButtonPressed() {
         firebaseAuthManager.login(loginEmail: emailTextField.text!,
                                   loginPassword: passwordTextField.text!,

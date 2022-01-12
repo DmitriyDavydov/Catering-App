@@ -8,18 +8,16 @@
 import UIKit
 
 class EmployeeMainViewController: UIViewController {
-    
-    var bottomNavigationController: UITabBarController!
 
+    var bottomNavigationController: UITabBarController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         createBottomNavigationController()
     }
     
     func createBottomNavigationController() {
-        
         bottomNavigationController = UITabBarController()
-        
         bottomNavigationController.tabBar.backgroundColor = .lightGray
         
         let sampleVC = UIViewController()
@@ -31,6 +29,5 @@ class EmployeeMainViewController: UIViewController {
         bottomNavigationController.viewControllers = [sampleVC, tableListViewController]
         self.view.addSubview(bottomNavigationController.view)
     }
-
-
+    
 }

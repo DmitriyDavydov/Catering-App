@@ -9,15 +9,17 @@ import UIKit
 import FirebaseFirestoreSwift
 
 class TableListViewController: UIViewController {
-    
+    // MARK: properties
     let firebaseQueryManager = FirebaseQueryManager()
-    let qrCodeGenerator = QRCodeGenerator()
+    let qrCodeGenerationManager = QRCodeGeneratorationManager()
     
     let backgroundView = UIView()
     let tableView = UITableView()
     let createButton = UIButton()
     let activityIndicator = UIActivityIndicatorView()
+    let refresher = UIRefreshControl()
     
+    // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -30,12 +32,14 @@ class TableListViewController: UIViewController {
         }
     }
     
+    // MARK: make
     func make() {
         view.addSubview(backgroundView)
         backgroundView.addSubview(createButton)
         backgroundView.addSubview(activityIndicator)
     }
     
+    // MARK: makeStyle
     func makeStyle() {
         backgroundView.frame = view.bounds
         backgroundView.backgroundColor = .white
@@ -49,8 +53,12 @@ class TableListViewController: UIViewController {
         activityIndicator.color = .black
         activityIndicator.hidesWhenStopped = true
         activityIndicator.isHidden = true
+        
+        refresher.attributedTitle = NSAttributedString(string: "Refreshing table list")
+        refresher.addTarget(self, action: #selector(self.refreshTableViewRows(_:)), for: .valueChanged)
     }
     
+    // MARK: makeConstraints
     func makeConstraints() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -71,29 +79,35 @@ class TableListViewController: UIViewController {
         activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
+    // MARK: setupTableView
     func setupTableView() {
         setTableViewDelegateAndDataSource()
         backgroundView.addSubview(tableView)
+        tableView.addSubview(refresher)
         tableView.register(TableListCell.self, forCellReuseIdentifier: "TableListCell")
         tableView.separatorStyle = .none
     }
     
+    // MARK: setTableViewDelegateAndDataSource
     func setTableViewDelegateAndDataSource() {
         tableView.delegate = self
         tableView.dataSource = self
     }
     
+    // MARK: showActivityIndicator
     func showActivityIndicator() {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         createButton.isHidden = true
     }
     
+    // MARK: hideActivityIndicator
     func hideActivityIndicator() {
         activityIndicator.stopAnimating()
         createButton.isHidden = false
     }
     
+    // MARK: hideActivityIndicator
     @objc func createTable() {
         showActivityIndicator()
         var positionsArray = [Int]()
@@ -120,12 +134,21 @@ class TableListViewController: UIViewController {
         }
         
     }
-        
+    
+    // MARK: refreshTableViewRows
+    @objc func refreshTableViewRows(_ sender: AnyObject) {
+        firebaseQueryManager.getActiveTableList {
+            self.tableView.reloadData()
+            self.refresher.endRefreshing()
+        }
+    }
+    
+    // MARK: createTableInDatabase
     func createTableInDatabase(tableNumber: Int, completion: @escaping () -> Void) {
         firebaseQueryManager.addToActiveTablelist(tableNumber: tableNumber) { id in
-            let qrCodeImage = self.qrCodeGenerator.generateQRCode(from: id)
+            let qrCodeImage = self.qrCodeGenerationManager.generateQRCode(from: id)
             
-            self.qrCodeGenerator.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage!) { (result) in
+            self.qrCodeGenerationManager.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage!) { (result) in
                 switch result {
                 case .success(let url):
                     self.firebaseQueryManager.updateURLfor(qrCodeID: id, with: url.absoluteString)
@@ -142,7 +165,8 @@ class TableListViewController: UIViewController {
         
     }
     
-    func invokeAlert(QRcodeURL: URL) {
+    // MARK: invokeAlert(with URL)
+    func invokeAlert(with QRcodeURL: URL) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         let imageView = UIImageView()
         imageView.load(url: QRcodeURL)
@@ -173,8 +197,29 @@ class TableListViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
+    // MARK: invokeAlert(with error)
+    func invokeAlert(with errorDescription: String) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        
+        alert.title = "ERROR"
+        alert.message = errorDescription
+        
+        let height = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 150)
+        let width = NSLayoutConstraint(item: alert.view!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 280)
+        alert.view.addConstraint(height)
+        alert.view.addConstraint(width)
+        
+        alert.addAction(UIAlertAction(title: "CANCEL", style: .default, handler: { action in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
 }
 
+// MARK: TableListVC extensions
 extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return firebaseQueryManager.activeTableList.count
@@ -200,13 +245,18 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
             firebaseQueryManager.getActiveTableList {
                 self.tableView.reloadData()
             }
-            qrCodeGenerator.deleteQRCode(qrCodeID: current.autoID)
+            qrCodeGenerationManager.deleteQRCode(qrCodeID: current.autoID)
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let current = firebaseQueryManager.activeTableList[indexPath.row]
-        invokeAlert(QRcodeURL: URL(string: current.qrCodeImageURL)!)
+        
+        if current.qrCodeImageURL.isEmpty{
+            invokeAlert(with: "There is no QR code image for this table")
+        } else {
+            invokeAlert(with: URL(string: current.qrCodeImageURL)!)
+        }
     }
     
     

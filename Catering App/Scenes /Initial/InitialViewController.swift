@@ -8,11 +8,12 @@
 import UIKit
 
 class InitialViewController: UIViewController {
-    
+// MARK: properties
     let backgroundView = UIView()
     let qrCodeArea = UIButton()
     let signInAsEmployeeButton = UIButton()
-
+    
+// MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         make()
@@ -20,12 +21,14 @@ class InitialViewController: UIViewController {
         makeConstraints()
     }
     
+// MARK: make
     func make() {
         view.addSubview(backgroundView)
         backgroundView.addSubview(qrCodeArea)
         backgroundView.addSubview(signInAsEmployeeButton)
     }
     
+// MARK: makeStyle
     func makeStyle() {
         backgroundView.frame = view.bounds
         backgroundView.backgroundColor = .white
@@ -38,6 +41,7 @@ class InitialViewController: UIViewController {
            
     }
     
+// MARK: makeConstraints
     func makeConstraints() {
         qrCodeArea.translatesAutoresizingMaskIntoConstraints = false
         qrCodeArea.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 100).isActive = true
@@ -50,6 +54,7 @@ class InitialViewController: UIViewController {
         signInAsEmployeeButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -40).isActive = true
     }
     
+// MARK: continueAsEmployeePressed
     @objc func continueAsEmployeePressed() {
         print("button pressed")
         let newVC = LoginViewController()
