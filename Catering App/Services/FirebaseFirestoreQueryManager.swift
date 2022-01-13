@@ -1,8 +1,8 @@
 //
-//  FirebaseQueryManager.swift
+//  FirebaseFirestoreQueryManager.swift
 //  Catering App
 //
-//  Created by ddavydov on 02.01.2022.
+//  Created by ddavydov on 13.01.2022.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import Firebase
 import UIKit
 import FirebaseFirestoreSwift
 
-class FirebaseQueryManager {
+class FirebaseFirestoreQueryManager {
 // MARK: properties
     var activeTableList = [QRCode]()
     var database = Firestore.firestore()
