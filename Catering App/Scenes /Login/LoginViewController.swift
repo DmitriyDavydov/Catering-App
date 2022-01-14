@@ -19,7 +19,7 @@ class LoginViewController: UIViewController {
     let loginButton = UIButton()
     let backButton = UIButton()
     
-// MARK: properties
+    // MARK: properties
     override func viewDidLoad() {
         super.viewDidLoad()
         make()
@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
         makeConstraints()
     }
     
-// MARK: make
+    // MARK: make
     func make() {
         view.addSubview(backgroundView)
         textFieldsStack.addArrangedSubview(emailTextField)
@@ -38,7 +38,7 @@ class LoginViewController: UIViewController {
         backgroundView.addSubview(backButton)
     }
     
-// MARK: makeStyle
+    // MARK: makeStyle
     func makeStyle() {
         backgroundView.frame = view.bounds
         backgroundView.backgroundColor = .white
@@ -72,41 +72,44 @@ class LoginViewController: UIViewController {
         loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
     }
     
-// MARK: makeConstraints
+    // MARK: makeConstraints
     func makeConstraints() {
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 50).isActive = true
-        backButton.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 5).isActive = true
-        backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
-        backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
-        
         loginLabel.translatesAutoresizingMaskIntoConstraints = false
-        loginLabel.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        loginLabel.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 50).isActive = true
-       
         textFieldsStack.translatesAutoresizingMaskIntoConstraints = false
-        textFieldsStack.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        textFieldsStack.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 50).isActive = true
-        textFieldsStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
-        textFieldsStack.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        
         loginButton.translatesAutoresizingMaskIntoConstraints = false
-        loginButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        loginButton.topAnchor.constraint(equalTo: textFieldsStack.bottomAnchor, constant: 50).isActive = true
-        loginButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 25).isActive = true
-        loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 75).isActive = true
+        
+        NSLayoutConstraint.activate([
+            backButton.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 50),
+            backButton.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 5),
+            backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
+            backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 50),
+            
+            loginLabel.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            loginLabel.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 50),
+            
+            textFieldsStack.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            textFieldsStack.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 50),
+            textFieldsStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
+            textFieldsStack.widthAnchor.constraint(equalToConstant: 200),
+            
+            loginButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            loginButton.topAnchor.constraint(equalTo: textFieldsStack.bottomAnchor, constant: 50),
+            loginButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 25),
+            loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 75)
+        ])
     }
     
-// MARK: backButtonPressed
+    // MARK: backButtonPressed
     @objc func backButtonPressed() {
         dismiss(animated: true)
     }
     
-// MARK: loginButtonPressed
+    // MARK: loginButtonPressed
     @objc func loginButtonPressed() {
         firebaseAuthManager.login(loginEmail: emailTextField.text!,
                                   loginPassword: passwordTextField.text!,
                                   loginViewController: self)
     }
-
+    
 }

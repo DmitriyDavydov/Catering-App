@@ -23,10 +23,13 @@ class EmployeeMainViewController: UIViewController {
         let sampleVC = UIViewController()
         sampleVC.title = "Sample VC"
         
-        let tableListViewController = TableListViewController()
-        tableListViewController.title = "Table List"
+        let employeeMenuVievController = EmployeeMenuViewController()
+        employeeMenuVievController.title = "MENU"
         
-        bottomNavigationController.viewControllers = [sampleVC, tableListViewController]
+        let tableListViewController = TableListViewController()
+        tableListViewController.title = "TABLE LIST"
+        
+        bottomNavigationController.viewControllers = [sampleVC, employeeMenuVievController, tableListViewController]
         self.view.addSubview(bottomNavigationController.view)
     }
     

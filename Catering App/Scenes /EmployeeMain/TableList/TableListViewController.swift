@@ -62,22 +62,25 @@ class TableListViewController: UIViewController {
     // MARK: makeConstraints
     func makeConstraints() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -10).isActive = true
-        
         createButton.translatesAutoresizingMaskIntoConstraints = false
-        createButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -120).isActive = true
-        createButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        createButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        createButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.centerXAnchor.constraint(equalTo: createButton.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: createButton.centerYAnchor).isActive = true
-        activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10),
+            tableView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10),
+            tableView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -10),
+            
+            createButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -120),
+            createButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            createButton.heightAnchor.constraint(equalToConstant: 35),
+            createButton.widthAnchor.constraint(equalToConstant: 80),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: createButton.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: createButton.centerYAnchor),
+            activityIndicator.heightAnchor.constraint(equalToConstant: 50),
+            activityIndicator.widthAnchor.constraint(equalToConstant: 50)
+        ])
     }
     
     // MARK: setupTableView

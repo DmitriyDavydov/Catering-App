@@ -8,12 +8,12 @@
 import UIKit
 
 class InitialViewController: UIViewController {
-// MARK: properties
+    // MARK: properties
     let backgroundView = UIView()
     let qrCodeArea = UIButton()
     let signInAsEmployeeButton = UIButton()
     
-// MARK: viewDidLoad
+    // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         make()
@@ -21,14 +21,14 @@ class InitialViewController: UIViewController {
         makeConstraints()
     }
     
-// MARK: make
+    // MARK: make
     func make() {
         view.addSubview(backgroundView)
         backgroundView.addSubview(qrCodeArea)
         backgroundView.addSubview(signInAsEmployeeButton)
     }
     
-// MARK: makeStyle
+    // MARK: makeStyle
     func makeStyle() {
         backgroundView.frame = view.bounds
         backgroundView.backgroundColor = .white
@@ -38,28 +38,30 @@ class InitialViewController: UIViewController {
         signInAsEmployeeButton.setTitle("Press to continue as an employee", for: .normal)
         signInAsEmployeeButton.setTitleColor(.systemBlue, for: .normal)
         signInAsEmployeeButton.addTarget(self, action: #selector(continueAsEmployeePressed), for: .touchUpInside)
-           
+        
     }
     
-// MARK: makeConstraints
+    // MARK: makeConstraints
     func makeConstraints() {
         qrCodeArea.translatesAutoresizingMaskIntoConstraints = false
-        qrCodeArea.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 100).isActive = true
-        qrCodeArea.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 25).isActive = true
-        qrCodeArea.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -25).isActive = true
-        qrCodeArea.heightAnchor.constraint(equalToConstant: 350).isActive = true
-        
         signInAsEmployeeButton.translatesAutoresizingMaskIntoConstraints = false
-        signInAsEmployeeButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        signInAsEmployeeButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -40).isActive = true
+        
+        NSLayoutConstraint.activate([
+            qrCodeArea.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 100),
+            qrCodeArea.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 25),
+            qrCodeArea.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -25),
+            qrCodeArea.heightAnchor.constraint(equalToConstant: 350),
+            
+            signInAsEmployeeButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
+            signInAsEmployeeButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -40)
+        ])
     }
     
-// MARK: continueAsEmployeePressed
+    // MARK: continueAsEmployeePressed
     @objc func continueAsEmployeePressed() {
-        print("button pressed")
         let newVC = LoginViewController()
         newVC.modalPresentationStyle = .fullScreen
         present(newVC, animated: true, completion: nil)
     }   
-
+    
 }
