@@ -19,7 +19,7 @@ class EmployeeMenuViewController: UIViewController {
     let alertTitle = UILabel()
     let alertSaveButton = UIButton()
     let alertCloseButton = UIButton()
-
+    
     let nameTextField = UITextField()
     let descriptionTextField = UITextField()
     let portionTextField = UITextField()
@@ -33,13 +33,18 @@ class EmployeeMenuViewController: UIViewController {
     let tableView = UITableView()
     let searchBar = UISearchBar()
     let addButton = UIButton()
-
+    let refresher = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         make()
         makeStyle()
         makeConstraints()
+        
+        firebaseFirestoreQueryManager.getActiveMenuItems {
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: make
@@ -60,33 +65,42 @@ class EmployeeMenuViewController: UIViewController {
         addButton.addTarget(self, action: #selector(invokeAddingAlert), for: .touchUpInside)
         
         searchBar.searchBarStyle = .minimal
+        
+        tableView.separatorStyle = .singleLine
+        
+        refresher.attributedTitle = NSAttributedString(string: "Refreshing menu items")
+        refresher.addTarget(self, action: #selector(self.refreshMenuItemsRows(_:)), for: .valueChanged)
     }
     
     // MARK: makeConstraints
     func makeConstraints() {
         addButton.translatesAutoresizingMaskIntoConstraints = false
-        addButton.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
-        addButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10).isActive = true
-        addButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        addButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        
         searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor).isActive = true
-        searchBar.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor,constant: 5).isActive = true
-        searchBar.trailingAnchor.constraint(equalTo: addButton.leadingAnchor, constant: -10).isActive = true
-        searchBar.centerXAnchor.constraint(equalTo: addButton.centerXAnchor).isActive = true
-
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -5).isActive = true
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10),
+            tableView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10),
+            tableView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -5),
+            
+            addButton.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor, constant: 5),
+            addButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -10),
+            addButton.heightAnchor.constraint(equalToConstant: 50),
+            addButton.widthAnchor.constraint(equalToConstant: 70),
+            
+            searchBar.topAnchor.constraint(equalTo: backgroundView.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor,constant: 5),
+            searchBar.trailingAnchor.constraint(equalTo: addButton.leadingAnchor, constant: -10),
+            searchBar.centerXAnchor.constraint(equalTo: addButton.centerXAnchor)
+        ])
     }
     
     // MARK: setupTableView
     func setupTableView() {
         setTableViewDelegateAndDataSource()
         backgroundView.addSubview(tableView)
+        tableView.addSubview(refresher)
         tableView.register(EmloyeeMenuTableViewCell.self, forCellReuseIdentifier: "EmployeeMenuCell")
         tableView.separatorStyle = .none
     }
@@ -95,6 +109,16 @@ class EmployeeMenuViewController: UIViewController {
     func setTableViewDelegateAndDataSource() {
         tableView.delegate = self
         tableView.dataSource = self
+    }
+    
+    // MARK: refreshMenuItemsRows
+    @objc func refreshMenuItemsRows(_ sender: AnyObject) {
+        firebaseFirestoreQueryManager.getActiveMenuItems {
+            print("RELOADING TABLE VIEW")
+            print("CURRENT ITEMS: \(self.firebaseFirestoreQueryManager.activeMenuItems.count)")
+            self.tableView.reloadData()
+            self.refresher.endRefreshing()
+        }
     }
     
     
@@ -141,7 +165,7 @@ class EmployeeMenuViewController: UIViewController {
         create(textField: categoryTextField, with: "Category")
         create(textField: chevronTextField, with: "Chevron")
         create(textField: priceTextField, with: "Price")
-
+        
         textFieldsStack.alignment = .fill
         textFieldsStack.distribution = .equalSpacing
         textFieldsStack.axis = .vertical
@@ -188,7 +212,7 @@ class EmployeeMenuViewController: UIViewController {
             textField.clearsOnBeginEditing = true
             textField.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         }
-
+        
     }
     
     // MARK: dismissAlert
@@ -196,6 +220,7 @@ class EmployeeMenuViewController: UIViewController {
         alertBackgroundView.removeFromSuperview()
         alertMainContainer.removeFromSuperview()
         alertTitle.removeFromSuperview()
+        alertSaveButton.removeFromSuperview()
         alertCloseButton.removeFromSuperview()
         
         nameTextField.removeFromSuperview()
@@ -210,24 +235,45 @@ class EmployeeMenuViewController: UIViewController {
     // MARK: saveMenuItem
     @objc func saveMenuItem() {
         print("saveMenuItem is trigerred")
-        
+        firebaseFirestoreQueryManager.addMenuItemToFirestore(name: nameTextField.text ?? "",
+                                                             description: descriptionTextField.text ?? "",
+                                                             portion: portionTextField.text ?? "",
+                                                             category: categoryTextField.text ?? "",
+                                                             chevron: chevronTextField.text ?? "",
+                                                             price: Int(priceTextField.text!) ?? 0) {
+            self.firebaseFirestoreQueryManager.getActiveMenuItems {
+                self.tableView.reloadData()
+            }
+        }
         dismissAddingAlert()
     }
-     
-
+    
+    
 }
 
 // MARK: EmployeeMenuVC extensions
 extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return firebaseFirestoreQueryManager.activeMenuItems.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeMenuCell", for: indexPath) as! EmloyeeMenuTableViewCell
+        
+        let name = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].name
+        let portion = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].portion
+        let price = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].price
+        let chevron = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].chevron
+        let description = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].description
+        
+        cell.set(itemName: name,
+                 itemPortion: portion,
+                 itemPrice: price,
+                 itemChevron: chevron,
+                 itemDescription: description)
         return cell
     }
-
+    
     
 }

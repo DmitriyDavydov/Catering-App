@@ -33,6 +33,7 @@
 		45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift */; };
 		45B82E302790274B00A36ECF /* EmployeeMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2F2790274B00A36ECF /* EmployeeMenuViewController.swift */; };
 		45B82E32279027A900A36ECF /* EmloyeeMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E31279027A900A36ECF /* EmloyeeMenuTableViewCell.swift */; };
+		45B8CDC22791B4EA00323214 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDC12791B4EA00323214 /* MenuItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFirestoreQueryManager.swift; sourceTree = "<group>"; };
 		45B82E2F2790274B00A36ECF /* EmployeeMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployeeMenuViewController.swift; sourceTree = "<group>"; };
 		45B82E31279027A900A36ECF /* EmloyeeMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmloyeeMenuTableViewCell.swift; sourceTree = "<group>"; };
+		45B8CDC12791B4EA00323214 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				45B82DFF2781DF0800A36ECF /* QRCode.swift */,
+				45B8CDC12791B4EA00323214 /* MenuItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				45B82E32279027A900A36ECF /* EmloyeeMenuTableViewCell.swift in Sources */,
 				453FA7332774B56900978998 /* AppDelegate.swift in Sources */,
 				453FA7352774B56900978998 /* SceneDelegate.swift in Sources */,
+				45B8CDC22791B4EA00323214 /* MenuItem.swift in Sources */,
 				45B82DF6277DFE7F00A36ECF /* TableListViewController.swift in Sources */,
 				45B82E002781DF0800A36ECF /* QRCode.swift in Sources */,
 			);
