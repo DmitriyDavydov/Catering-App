@@ -9,9 +9,13 @@ import UIKit
 import FirebaseFirestoreSwift
 
 class EmployeeMenuViewController: UIViewController {
+
     // MARK: properties
     let firebaseFirestoreQueryManager = FirebaseFirestoreQueryManager()
     let firebaseStorageManager = FirebaseStorageManager()
+    var menuItemsSortedByCategories = [[MenuItem]]()
+    //var filteredMenuItemsSortedByCategories: [[MenuItem]]!
+    var uniqueCategories: [String] = []
     
     //alertview
     let alertBackgroundView = UIView()
@@ -38,6 +42,7 @@ class EmployeeMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        //setSearchBarDelegateAndFilteredData()
         make()
         makeStyle()
         makeConstraints()
@@ -45,6 +50,7 @@ class EmployeeMenuViewController: UIViewController {
         firebaseFirestoreQueryManager.getActiveMenuItems {
             self.tableView.reloadData()
         }
+        
     }
     
     // MARK: make
@@ -110,7 +116,13 @@ class EmployeeMenuViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
-    
+    /*
+    // MARK: setTableViewDelegateAndDataSource
+    func setSearchBarDelegateAndFilteredData() {
+        searchBar.delegate = self
+        filteredMenuItemsSortedByCategories = menuItemsSortedByCategories
+    }
+    */
     // MARK: refreshMenuItemsRows
     @objc func refreshMenuItemsRows(_ sender: AnyObject) {
         firebaseFirestoreQueryManager.getActiveMenuItems {
@@ -234,7 +246,6 @@ class EmployeeMenuViewController: UIViewController {
     
     // MARK: saveMenuItem
     @objc func saveMenuItem() {
-        print("saveMenuItem is trigerred")
         firebaseFirestoreQueryManager.addMenuItemToFirestore(name: nameTextField.text ?? "",
                                                              description: descriptionTextField.text ?? "",
                                                              portion: portionTextField.text ?? "",
@@ -253,19 +264,44 @@ class EmployeeMenuViewController: UIViewController {
 
 // MARK: EmployeeMenuVC extensions
 extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return firebaseFirestoreQueryManager.activeMenuItems.count
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        var everyItemCategory = [String]()
+        
+        menuItemsSortedByCategories.removeAll()
+
+        firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
+            everyItemCategory.append(menuItem.category)
+        }
+        
+        uniqueCategories = Array(Set(everyItemCategory))
+        uniqueCategories.sort()
+    
+        for categoryName in uniqueCategories {
+            var tempArray = [MenuItem]()
+            firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
+                if menuItem.category == categoryName {
+                    tempArray.append(menuItem)
+                }
+            }
+            menuItemsSortedByCategories.append(tempArray)
+        }
+        
+        return menuItemsSortedByCategories.count
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItemsSortedByCategories[section].count
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeMenuCell", for: indexPath) as! EmloyeeMenuTableViewCell
-        
-        let name = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].name
-        let portion = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].portion
-        let price = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].price
-        let chevron = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].chevron
-        let description = firebaseFirestoreQueryManager.activeMenuItems[indexPath.row].description
+ 
+        let name = menuItemsSortedByCategories[indexPath.section][indexPath.row].name
+        let portion = menuItemsSortedByCategories[indexPath.section][indexPath.row].portion
+        let price = menuItemsSortedByCategories[indexPath.section][indexPath.row].price
+        let chevron = menuItemsSortedByCategories[indexPath.section][indexPath.row].chevron
+        let description = menuItemsSortedByCategories[indexPath.section][indexPath.row].description
         
         cell.set(itemName: name,
                  itemPortion: portion,
@@ -275,5 +311,36 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.text = uniqueCategories[section]
+        label.font = UIFont.systemFont(ofSize: 29, weight: .black)
+        label.backgroundColor = .white
+        return label
+    }
     
 }
+
+/*
+extension EmployeeMenuViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredMenuItemsSortedByCategories = []
+        
+        if searchText == "" {
+            filteredMenuItemsSortedByCategories = menuItemsSortedByCategories
+        } else {
+            var temp:[MenuItem] = []
+            for section in menuItemsSortedByCategories {
+                for item in section {
+                    if item.name.lowercased().contains(searchText.lowercased()) {
+                        temp.append(item)
+                    }
+                }
+                filteredMenuItemsSortedByCategories.append(section[temp])
+            }
+        }
+    }
+    
+}
+*/

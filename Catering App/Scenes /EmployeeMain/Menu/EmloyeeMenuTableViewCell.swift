@@ -63,7 +63,7 @@ class EmloyeeMenuTableViewCell: UITableViewCell {
         
         nameLabel.numberOfLines = 0
         nameLabel.textColor = .black
-        nameLabel.font = UIFont.systemFont(ofSize: 20, weight: .black)
+        nameLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         portionLabel.numberOfLines = 0
         portionLabel.font = UIFont.systemFont(ofSize: 15, weight: .light)
