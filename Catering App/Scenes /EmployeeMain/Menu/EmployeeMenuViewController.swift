@@ -14,8 +14,9 @@ class EmployeeMenuViewController: UIViewController {
     let firebaseFirestoreQueryManager = FirebaseFirestoreQueryManager()
     let firebaseStorageManager = FirebaseStorageManager()
     var menuItemsSortedByCategories = [[MenuItem]]()
-    //var filteredMenuItemsSortedByCategories: [[MenuItem]]!
+    var filteredMenuItemsSortedByCategories: [[MenuItem]]!
     var uniqueCategories: [String] = []
+    var eventHandler: String = "Firebase"
     
     //alertview
     let alertBackgroundView = UIView()
@@ -41,8 +42,8 @@ class EmployeeMenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setSearchBarDelegate()
         setupTableView()
-        //setSearchBarDelegateAndFilteredData()
         make()
         makeStyle()
         makeConstraints()
@@ -116,23 +117,19 @@ class EmployeeMenuViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
-    /*
-    // MARK: setTableViewDelegateAndDataSource
-    func setSearchBarDelegateAndFilteredData() {
+    
+    // MARK: setSearchBarDelegate
+    func setSearchBarDelegate() {
         searchBar.delegate = self
-        filteredMenuItemsSortedByCategories = menuItemsSortedByCategories
     }
-    */
+    
     // MARK: refreshMenuItemsRows
     @objc func refreshMenuItemsRows(_ sender: AnyObject) {
         firebaseFirestoreQueryManager.getActiveMenuItems {
-            print("RELOADING TABLE VIEW")
-            print("CURRENT ITEMS: \(self.firebaseFirestoreQueryManager.activeMenuItems.count)")
             self.tableView.reloadData()
             self.refresher.endRefreshing()
         }
     }
-    
     
     // MARK: invokeAlert
     @objc func invokeAddingAlert() {
@@ -257,8 +254,8 @@ class EmployeeMenuViewController: UIViewController {
             }
         }
         dismissAddingAlert()
+        eventHandler = "Firebase"
     }
-    
     
 }
 
@@ -266,42 +263,48 @@ class EmployeeMenuViewController: UIViewController {
 extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        var everyItemCategory = [String]()
         
-        menuItemsSortedByCategories.removeAll()
+        if eventHandler == "Firebase" {
+            var everyItemCategory = [String]()
+            
+            menuItemsSortedByCategories.removeAll()
 
-        firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
-            everyItemCategory.append(menuItem.category)
-        }
-        
-        uniqueCategories = Array(Set(everyItemCategory))
-        uniqueCategories.sort()
-    
-        for categoryName in uniqueCategories {
-            var tempArray = [MenuItem]()
             firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
-                if menuItem.category == categoryName {
-                    tempArray.append(menuItem)
-                }
+                everyItemCategory.append(menuItem.category)
             }
-            menuItemsSortedByCategories.append(tempArray)
-        }
+            
+            uniqueCategories = Array(Set(everyItemCategory))
+            uniqueCategories.sort()
         
-        return menuItemsSortedByCategories.count
+            for categoryName in uniqueCategories {
+                var tempArray = [MenuItem]()
+                firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
+                    if menuItem.category == categoryName {
+                        tempArray.append(menuItem)
+                    }
+                }
+                menuItemsSortedByCategories.append(tempArray)
+            }
+            filteredMenuItemsSortedByCategories = menuItemsSortedByCategories
+            return menuItemsSortedByCategories.count
+        } else {
+            return filteredMenuItemsSortedByCategories.count
+        }
+       
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItemsSortedByCategories[section].count
+        return filteredMenuItemsSortedByCategories[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeMenuCell", for: indexPath) as! EmloyeeMenuTableViewCell
- 
-        let name = menuItemsSortedByCategories[indexPath.section][indexPath.row].name
-        let portion = menuItemsSortedByCategories[indexPath.section][indexPath.row].portion
-        let price = menuItemsSortedByCategories[indexPath.section][indexPath.row].price
-        let chevron = menuItemsSortedByCategories[indexPath.section][indexPath.row].chevron
-        let description = menuItemsSortedByCategories[indexPath.section][indexPath.row].description
+        
+        let name = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].name
+        let portion = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].portion
+        let price = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].price
+        let chevron = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].chevron
+        let description = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].description
         
         cell.set(itemName: name,
                  itemPortion: portion,
@@ -321,26 +324,29 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
     
 }
 
-/*
+
 extension EmployeeMenuViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredMenuItemsSortedByCategories = []
+        filteredMenuItemsSortedByCategories.removeAll()
+        var temp: [MenuItem] = []
         
         if searchText == "" {
             filteredMenuItemsSortedByCategories = menuItemsSortedByCategories
         } else {
-            var temp:[MenuItem] = []
             for section in menuItemsSortedByCategories {
                 for item in section {
                     if item.name.lowercased().contains(searchText.lowercased()) {
                         temp.append(item)
                     }
                 }
-                filteredMenuItemsSortedByCategories.append(section[temp])
+                filteredMenuItemsSortedByCategories.append(temp)
+                temp.removeAll()
             }
         }
+        eventHandler = "Search"
+        self.tableView.reloadData()
     }
     
 }
-*/
+
