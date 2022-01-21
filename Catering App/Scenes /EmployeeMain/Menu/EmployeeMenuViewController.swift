@@ -9,14 +9,15 @@ import UIKit
 import FirebaseFirestoreSwift
 
 class EmployeeMenuViewController: UIViewController {
-
     // MARK: properties
     let firebaseFirestoreQueryManager = FirebaseFirestoreQueryManager()
     let firebaseStorageManager = FirebaseStorageManager()
     var menuItemsSortedByCategories = [[MenuItem]]()
     var filteredMenuItemsSortedByCategories: [[MenuItem]]!
-    var uniqueCategories: [String] = []
+    var uniqueMenuCategories: [String] = []
     var eventHandler: String = "Firebase"
+    var allertActionHandler: String = "Save"
+    var menuItemIdHandler: String = ""
     
     //alertview
     let alertBackgroundView = UIView()
@@ -59,6 +60,7 @@ class EmployeeMenuViewController: UIViewController {
         view.addSubview(backgroundView)
         backgroundView.addSubview(searchBar)
         backgroundView.addSubview(addButton)
+        setupLongPressGesture()
     }
     
     // MARK: makeStyle
@@ -69,7 +71,7 @@ class EmployeeMenuViewController: UIViewController {
         addButton.setTitle("ADD", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        addButton.addTarget(self, action: #selector(invokeAddingAlert), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(invokeAllertToSaveItem), for: .touchUpInside)
         
         searchBar.searchBarStyle = .minimal
         
@@ -131,8 +133,16 @@ class EmployeeMenuViewController: UIViewController {
         }
     }
     
-    // MARK: invokeAlert
-    @objc func invokeAddingAlert() {
+    // MARK: invokeAlertView
+    @objc func invokeAlertView(title: String,
+                               name: String,
+                               description: String,
+                               portion: String,
+                               category: String,
+                               chevron: String,
+                               price: String,
+                               id: String?) {
+        
         backgroundView.addSubview(alertBackgroundView)
         backgroundView.addSubview(alertMainContainer)
         backgroundView.addSubview(alertTitle)
@@ -154,26 +164,38 @@ class EmployeeMenuViewController: UIViewController {
         alertMainContainer.backgroundColor = .white
         alertMainContainer.layer.cornerRadius = 10
         
-        alertTitle.text = "ADD NEW ITEM"
+        alertTitle.text = title
         alertTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         alertSaveButton.setTitle("SAVE", for: .normal)
         alertSaveButton.setTitleColor(.white, for: .normal)
         alertSaveButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         alertSaveButton.backgroundColor = .black
-        alertSaveButton.addTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
+        
+        if allertActionHandler == "Save" {
+            alertSaveButton.removeTarget(self, action: #selector(editMenuItem), for: .touchUpInside)
+            alertSaveButton.addTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
+        }
+        
+        if allertActionHandler == "Edit" {
+            if let id = id {
+                menuItemIdHandler = id
+                alertSaveButton.removeTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
+                alertSaveButton.addTarget(self, action: #selector(editMenuItem), for: .touchUpInside)
+            }
+        }
         
         alertCloseButton.setTitle("x", for: .normal)
         alertCloseButton.setTitleColor(.black, for: .normal)
         alertCloseButton.titleLabel?.font = UIFont.systemFont(ofSize: 25, weight: .bold)
         alertCloseButton.addTarget(self, action: #selector(dismissAddingAlert), for: .touchUpInside)
         
-        create(textField: nameTextField, with: "Name")
-        create(textField: descriptionTextField, with: "Description")
-        create(textField: portionTextField, with: "Portion")
-        create(textField: categoryTextField, with: "Category")
-        create(textField: chevronTextField, with: "Chevron")
-        create(textField: priceTextField, with: "Price")
+        create(textField: nameTextField, with: name)
+        create(textField: descriptionTextField, with: description)
+        create(textField: portionTextField, with: portion)
+        create(textField: categoryTextField, with: category)
+        create(textField: chevronTextField, with: chevron)
+        create(textField: priceTextField, with: price)
         
         textFieldsStack.alignment = .fill
         textFieldsStack.distribution = .equalSpacing
@@ -241,6 +263,40 @@ class EmployeeMenuViewController: UIViewController {
         textFieldsStack.removeFromSuperview()
     }
     
+    // MARK: invokeAllertToSaveItem
+    @objc func invokeAllertToSaveItem() {
+        allertActionHandler = "Save"
+        invokeAlertView(title: "SAVE NEW ITEM",
+                        name: "Name",
+                        description: "Description",
+                        portion: "Portion",
+                        category: "Category",
+                        chevron: "Chevron",
+                        price: "Price",
+                        id: nil)
+    }
+    
+    // MARK: invokeAllertToEditItem
+    @objc func invokeAllertToEditItem(inputTitle: String,
+                                      inputName: String,
+                                      InputDescription: String,
+                                      inputPortion: String,
+                                      inputCategory: String,
+                                      inputChevron: String,
+                                      inputPrice: String,
+                                      itemID: String) {
+        
+        allertActionHandler = "Edit"
+        invokeAlertView(title: inputTitle,
+                        name: inputName,
+                        description: InputDescription,
+                        portion: inputPortion,
+                        category: inputCategory,
+                        chevron: inputChevron,
+                        price: inputPrice,
+                        id: itemID)
+    }
+    
     // MARK: saveMenuItem
     @objc func saveMenuItem() {
         firebaseFirestoreQueryManager.addMenuItemToFirestore(name: nameTextField.text ?? "",
@@ -257,9 +313,28 @@ class EmployeeMenuViewController: UIViewController {
         eventHandler = "Firebase"
     }
     
+    // MARK: editMenuItem
+    @objc func editMenuItem() {
+        firebaseFirestoreQueryManager.updateMenuItemInFirestore(id: menuItemIdHandler,
+                                                                editedName: nameTextField.text ?? "",
+                                                                editedDescription: descriptionTextField.text ?? "",
+                                                                editedPortion: portionTextField.text ?? "",
+                                                                editedCategory: categoryTextField.text ?? "",
+                                                                editedChevron: chevronTextField.text ?? "",
+                                                                editedPrice: Int(priceTextField.text!) ?? 0) {
+            
+            
+            self.firebaseFirestoreQueryManager.getActiveMenuItems {
+                self.tableView.reloadData()
+            }
+        }
+        dismissAddingAlert()
+        eventHandler = "Firebase"
+    }
+    
 }
 
-// MARK: EmployeeMenuVC extensions
+// MARK: VC extensions - TableView
 extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -268,15 +343,15 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
             var everyItemCategory = [String]()
             
             menuItemsSortedByCategories.removeAll()
-
+            
             firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
                 everyItemCategory.append(menuItem.category)
             }
             
-            uniqueCategories = Array(Set(everyItemCategory))
-            uniqueCategories.sort()
-        
-            for categoryName in uniqueCategories {
+            uniqueMenuCategories = Array(Set(everyItemCategory))
+            uniqueMenuCategories.sort()
+            
+            for categoryName in uniqueMenuCategories {
                 var tempArray = [MenuItem]()
                 firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
                     if menuItem.category == categoryName {
@@ -290,7 +365,7 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
         } else {
             return filteredMenuItemsSortedByCategories.count
         }
-       
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -305,18 +380,22 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
         let price = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].price
         let chevron = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].chevron
         let description = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].description
+        let category = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].category
+        let id = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row].autoID
         
         cell.set(itemName: name,
                  itemPortion: portion,
                  itemPrice: price,
                  itemChevron: chevron,
-                 itemDescription: description)
+                 itemDescription: description,
+                 itemCategory: category,
+                 itemID: id)
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel()
-        label.text = uniqueCategories[section]
+        label.text = uniqueMenuCategories[section]
         label.font = UIFont.systemFont(ofSize: 29, weight: .black)
         label.backgroundColor = .white
         return label
@@ -324,7 +403,7 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
     
 }
 
-
+// MARK: VC extensions - SearchBar
 extension EmployeeMenuViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -346,6 +425,36 @@ extension EmployeeMenuViewController: UISearchBarDelegate {
         }
         eventHandler = "Search"
         self.tableView.reloadData()
+    }
+    
+}
+
+// MARK: VC extensions - LongPressGesture
+extension EmployeeMenuViewController: UIGestureRecognizerDelegate {
+    
+    func setupLongPressGesture() {
+        let longPressGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPress))
+        longPressGesture.minimumPressDuration = 2.0 // 2 second press
+        longPressGesture.delegate = self
+        tableView.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            let touchPoint = gestureRecognizer.location(in: self.tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                let currentCell = tableView.cellForRow(at: indexPath) as! EmloyeeMenuTableViewCell
+                
+                invokeAllertToEditItem(inputTitle: "EDIT CURRENT ITEM",
+                                       inputName: currentCell.nameLabel.text ?? "",
+                                       InputDescription: currentCell.descriptionLabel.text ?? "",
+                                       inputPortion: currentCell.portionLabel.text ?? "",
+                                       inputCategory: currentCell.categoryName,
+                                       inputChevron: currentCell.chevronLabel.text ?? "",
+                                       inputPrice: currentCell.priceLabel.text ?? "",
+                                       itemID: currentCell.id)
+            }
+        }
     }
     
 }

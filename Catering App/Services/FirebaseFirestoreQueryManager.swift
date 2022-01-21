@@ -81,7 +81,8 @@ class FirebaseFirestoreQueryManager {
                                 portion: String,
                                 category: String,
                                 chevron: String,
-                                price: Int, completion: @escaping () -> (Void)) {
+                                price: Int,
+                                completion: @escaping () -> (Void)) {
         
         var ref: DocumentReference? = nil
         ref = database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item")
@@ -125,6 +126,37 @@ class FirebaseFirestoreQueryManager {
                     
                 }
                 
+            }
+        }
+        
+    }
+    
+    
+    // MARK: updateMenuItemInFirestore
+    func updateMenuItemInFirestore(id: String,
+                                   editedName: String,
+                                   editedDescription: String,
+                                   editedPortion: String,
+                                   editedCategory: String,
+                                   editedChevron: String,
+                                   editedPrice: Int,
+                                   completion: @escaping () -> (Void)) {
+        
+        let ref = database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item").document("\(id)")
+        
+        ref.updateData([
+            "name" : "\(editedName)",
+            "description" : "\(editedDescription)",
+            "portion" : "\(editedPortion)",
+            "category" : "\(editedCategory)",
+            "chevron" : "\(editedChevron)",
+            "price" : editedPrice
+        ]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+                completion()
             }
         }
         

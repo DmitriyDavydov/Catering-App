@@ -18,6 +18,9 @@ class EmloyeeMenuTableViewCell: UITableViewCell {
     let priceLabel = UILabel()
     let labelsStack = UIStackView()
     
+    var categoryName = String()
+    var id = String()
+    
     // MARK: init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -44,12 +47,16 @@ class EmloyeeMenuTableViewCell: UITableViewCell {
              itemPortion: String,
              itemPrice: Int,
              itemChevron: String,
-             itemDescription: String) {
+             itemDescription: String,
+             itemCategory: String,
+             itemID: String) {
         nameLabel.text = itemName
         priceLabel.text = String(itemPrice)
         portionLabel.text = itemPortion
         chevronLabel.text = itemChevron
         descriptionLabel.text = itemDescription
+        categoryName = itemCategory
+        id = itemID
     }
     
     // MARK: makeStyle
