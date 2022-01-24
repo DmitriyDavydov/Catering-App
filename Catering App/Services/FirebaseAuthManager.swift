@@ -8,10 +8,13 @@
 import Foundation
 import FirebaseAuth
 
+protocol FirebaseAuthManager {
+    func login(loginEmail: String, loginPassword: String, completion: @escaping (Any?, Error?) -> Void)
+}
 
-class FirebaseAuthManager {
+class FirebaseAuthManagerImpl: FirebaseAuthManager {
     // MARK: login
-    func login (loginEmail: String, loginPassword: String, completion: @escaping (Any?, Error?) -> Void) {
+    func login(loginEmail: String, loginPassword: String, completion: @escaping (Any?, Error?) -> Void) {
             
             if (!loginEmail.isEmpty && !loginPassword.isEmpty) {
                 FirebaseAuth.Auth.auth().signIn(withEmail: loginEmail, password: loginPassword, completion: { [weak self] result, error in
@@ -29,3 +32,27 @@ class FirebaseAuthManager {
         }
     
 }
+
+
+/*
+class FirebaseAuthManager {
+    // MARK: login
+    func login(loginEmail: String, loginPassword: String, completion: @escaping (Any?, Error?) -> Void) {
+            
+            if (!loginEmail.isEmpty && !loginPassword.isEmpty) {
+                FirebaseAuth.Auth.auth().signIn(withEmail: loginEmail, password: loginPassword, completion: { [weak self] result, error in
+                    guard let strongSelf = self else { return }
+                    if (error != nil) {
+                        completion(nil, error)
+                        return
+                    } else {
+                        completion(result, nil)
+                        return
+                    }
+                    
+                })
+            }
+        }
+    
+}
+*/

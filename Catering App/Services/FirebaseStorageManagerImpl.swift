@@ -9,7 +9,12 @@ import Foundation
 import UIKit
 import FirebaseStorage
 
-class FirebaseStorageManager {
+protocol FirebaseStorageManager {
+    func uploadQRCode(qrCodeID: String, qrCodeImage: UIImage, completion: @escaping (Result<URL, Error>) -> Void)
+    func deleteQRCode(qrCodeID: String)
+}
+
+class FirebaseStorageManagerImpl: FirebaseStorageManager {
 // MARK: properties
     var storage = Storage.storage()
     

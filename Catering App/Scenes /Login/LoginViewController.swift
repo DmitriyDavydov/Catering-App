@@ -10,7 +10,8 @@ import SwiftUI
 
 class LoginViewController: UIViewController {
     // MARK: properties
-    let firebaseAuthManager = FirebaseAuthManager()
+    var firebaseAuthManagerDelegate: FirebaseAuthManager?
+    let firebaseAuthManagerImpl = FirebaseAuthManagerImpl()
     
     let backgroundView = UIView()
     let loginLabel = UILabel()
@@ -37,6 +38,9 @@ class LoginViewController: UIViewController {
         backgroundView.addSubview(textFieldsStack)
         backgroundView.addSubview(loginButton)
         backgroundView.addSubview(backButton)
+        
+        //self.firebaseAuthManagerDelegate = firebaseAuthManagerImpl
+        firebaseAuthManagerDelegate = firebaseAuthManagerImpl
     }
     
     // MARK: makeStyle
@@ -119,7 +123,8 @@ class LoginViewController: UIViewController {
     
     // MARK: loginButtonPressed
     @objc func loginButtonPressed() {
-        firebaseAuthManager.login(loginEmail: emailTextField.text!, loginPassword: passwordTextField.text!) { result, error in
+        
+        self.firebaseAuthManagerDelegate?.login(loginEmail: emailTextField.text!, loginPassword: passwordTextField.text!) { result, error in
             if error != nil {
                 print("LOGIN ERROR")
                 self.invokeErrorAlert()

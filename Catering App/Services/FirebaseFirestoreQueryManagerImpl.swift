@@ -10,7 +10,30 @@ import Firebase
 import UIKit
 import FirebaseFirestoreSwift
 
-class FirebaseFirestoreQueryManager {
+protocol FirebaseFirestoreQueryManager {
+    func deleteFromActiveTableList(qrIDtoDelete: String)
+    func addToActiveTablelist(tableNumber: Int, completion: @escaping (String) -> Void)
+    func getActiveTableList(completion: @escaping () -> Void)
+    func updateURLfor(qrCodeID: String, with url: String)
+    func addMenuItemToFirestore(name: String,
+                                description: String,
+                                portion: String,
+                                category: String,
+                                chevron: String,
+                                price: Int,
+                                completion: @escaping () -> Void)
+    func getActiveMenuItems(completion: @escaping () -> Void)
+    func updateMenuItemInFirestore(id: String,
+                                   editedName: String,
+                                   editedDescription: String,
+                                   editedPortion: String,
+                                   editedCategory: String,
+                                   editedChevron: String,
+                                   editedPrice: Int,
+                                   completion: @escaping () -> Void)
+}
+
+class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
     // MARK: properties
     var activeTableList = [QRCode]()
     var activeMenuItems = [MenuItem]()
@@ -22,7 +45,7 @@ class FirebaseFirestoreQueryManager {
     }
     
     // MARK: addToActiveTablelist
-    func addToActiveTablelist(tableNumber: Int, completion: @escaping (String) -> ()) {
+    func addToActiveTablelist(tableNumber: Int, completion: @escaping (String) -> Void) {
         var ref: DocumentReference? = nil
         ref = database.collection("qr_codes").addDocument(data: ["qr_code_image_url" : "",
                                                                  "table_number" : tableNumber]) { error in
@@ -37,7 +60,7 @@ class FirebaseFirestoreQueryManager {
     }
     
     // MARK: getActiveTableList
-    func getActiveTableList(completion: @escaping () -> (Void)) {
+    func getActiveTableList(completion: @escaping () -> Void) {
         self.database.collection("qr_codes").getDocuments { snapshot, error in
             
             if error == nil {
@@ -82,7 +105,7 @@ class FirebaseFirestoreQueryManager {
                                 category: String,
                                 chevron: String,
                                 price: Int,
-                                completion: @escaping () -> (Void)) {
+                                completion: @escaping () -> Void) {
         
         var ref: DocumentReference? = nil
         ref = database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item")
@@ -105,7 +128,7 @@ class FirebaseFirestoreQueryManager {
     }
     
     // MARK: getActiveMenuItems
-    func getActiveMenuItems(completion: @escaping () -> (Void)) {
+    func getActiveMenuItems(completion: @escaping () -> Void) {
         self.database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item")
             .getDocuments { snapshot, error in
             
@@ -140,7 +163,7 @@ class FirebaseFirestoreQueryManager {
                                    editedCategory: String,
                                    editedChevron: String,
                                    editedPrice: Int,
-                                   completion: @escaping () -> (Void)) {
+                                   completion: @escaping () -> Void) {
         
         let ref = database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item").document("\(id)")
         

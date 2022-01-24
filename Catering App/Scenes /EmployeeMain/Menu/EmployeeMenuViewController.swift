@@ -10,8 +10,9 @@ import FirebaseFirestoreSwift
 
 class EmployeeMenuViewController: UIViewController {
     // MARK: properties
-    let firebaseFirestoreQueryManager = FirebaseFirestoreQueryManager()
-    let firebaseStorageManager = FirebaseStorageManager()
+    var firebaseFirestoreQueryManagerDelegate: FirebaseFirestoreQueryManager?
+    let firebaseFirestoreQueryManagerImpl = FirebaseFirestoreQueryManagerImpl()
+
     var menuItemsSortedByCategories = [[MenuItem]]()
     var filteredMenuItemsSortedByCategories: [[MenuItem]]!
     var uniqueMenuCategories: [String] = []
@@ -49,7 +50,7 @@ class EmployeeMenuViewController: UIViewController {
         makeStyle()
         makeConstraints()
         
-        firebaseFirestoreQueryManager.getActiveMenuItems {
+        firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
             self.tableView.reloadData()
         }
         
@@ -61,6 +62,7 @@ class EmployeeMenuViewController: UIViewController {
         backgroundView.addSubview(searchBar)
         backgroundView.addSubview(addButton)
         setupLongPressGesture()
+        firebaseFirestoreQueryManagerDelegate = firebaseFirestoreQueryManagerImpl
     }
     
     // MARK: makeStyle
@@ -127,7 +129,7 @@ class EmployeeMenuViewController: UIViewController {
     
     // MARK: refreshMenuItemsRows
     @objc func refreshMenuItemsRows(_ sender: AnyObject) {
-        firebaseFirestoreQueryManager.getActiveMenuItems {
+        firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
             self.tableView.reloadData()
             self.refresher.endRefreshing()
         }
@@ -299,13 +301,13 @@ class EmployeeMenuViewController: UIViewController {
     
     // MARK: saveMenuItem
     @objc func saveMenuItem() {
-        firebaseFirestoreQueryManager.addMenuItemToFirestore(name: nameTextField.text ?? "",
+        firebaseFirestoreQueryManagerImpl.addMenuItemToFirestore(name: nameTextField.text ?? "",
                                                              description: descriptionTextField.text ?? "",
                                                              portion: portionTextField.text ?? "",
                                                              category: categoryTextField.text ?? "",
                                                              chevron: chevronTextField.text ?? "",
                                                              price: Int(priceTextField.text!) ?? 0) {
-            self.firebaseFirestoreQueryManager.getActiveMenuItems {
+            self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
                 self.tableView.reloadData()
             }
         }
@@ -315,7 +317,7 @@ class EmployeeMenuViewController: UIViewController {
     
     // MARK: editMenuItem
     @objc func editMenuItem() {
-        firebaseFirestoreQueryManager.updateMenuItemInFirestore(id: menuItemIdHandler,
+        firebaseFirestoreQueryManagerImpl.updateMenuItemInFirestore(id: menuItemIdHandler,
                                                                 editedName: nameTextField.text ?? "",
                                                                 editedDescription: descriptionTextField.text ?? "",
                                                                 editedPortion: portionTextField.text ?? "",
@@ -324,7 +326,7 @@ class EmployeeMenuViewController: UIViewController {
                                                                 editedPrice: Int(priceTextField.text!) ?? 0) {
             
             
-            self.firebaseFirestoreQueryManager.getActiveMenuItems {
+            self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
                 self.tableView.reloadData()
             }
         }
@@ -344,7 +346,7 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
             
             menuItemsSortedByCategories.removeAll()
             
-            firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
+            firebaseFirestoreQueryManagerImpl.activeMenuItems.forEach { menuItem in
                 everyItemCategory.append(menuItem.category)
             }
             
@@ -353,7 +355,7 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
             
             for categoryName in uniqueMenuCategories {
                 var tempArray = [MenuItem]()
-                firebaseFirestoreQueryManager.activeMenuItems.forEach { menuItem in
+                firebaseFirestoreQueryManagerImpl.activeMenuItems.forEach { menuItem in
                     if menuItem.category == categoryName {
                         tempArray.append(menuItem)
                     }

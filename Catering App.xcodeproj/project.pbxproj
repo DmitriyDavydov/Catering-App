@@ -29,8 +29,8 @@
 		45B82E21278C308200A36ECF /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E20278C308200A36ECF /* FirebaseStorageCombine-Community */; };
 		45B82E23278C308200A36ECF /* FirebaseStorageSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 45B82E22278C308200A36ECF /* FirebaseStorageSwift-Beta */; };
 		45B82E28278C68BF00A36ECF /* UIImageView+Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E27278C68BF00A36ECF /* UIImageView+Load.swift */; };
-		45B82E2A27901C3F00A36ECF /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2927901C3F00A36ECF /* FirebaseStorageManager.swift */; };
-		45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift */; };
+		45B82E2A27901C3F00A36ECF /* FirebaseStorageManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2927901C3F00A36ECF /* FirebaseStorageManagerImpl.swift */; };
+		45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift */; };
 		45B82E302790274B00A36ECF /* EmployeeMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E2F2790274B00A36ECF /* EmployeeMenuViewController.swift */; };
 		45B82E32279027A900A36ECF /* EmloyeeMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B82E31279027A900A36ECF /* EmloyeeMenuTableViewCell.swift */; };
 		45B8CDC22791B4EA00323214 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDC12791B4EA00323214 /* MenuItem.swift */; };
@@ -53,8 +53,8 @@
 		45B82DFF2781DF0800A36ECF /* QRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
 		45B82E1127871AA000A36ECF /* QRCodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
 		45B82E27278C68BF00A36ECF /* UIImageView+Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Load.swift"; sourceTree = "<group>"; };
-		45B82E2927901C3F00A36ECF /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
-		45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFirestoreQueryManager.swift; sourceTree = "<group>"; };
+		45B82E2927901C3F00A36ECF /* FirebaseStorageManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManagerImpl.swift; sourceTree = "<group>"; };
+		45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFirestoreQueryManagerImpl.swift; sourceTree = "<group>"; };
 		45B82E2F2790274B00A36ECF /* EmployeeMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployeeMenuViewController.swift; sourceTree = "<group>"; };
 		45B82E31279027A900A36ECF /* EmloyeeMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmloyeeMenuTableViewCell.swift; sourceTree = "<group>"; };
 		45B8CDC12791B4EA00323214 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
@@ -142,8 +142,8 @@
 			isa = PBXGroup;
 			children = (
 				45B82DEB277DDD5100A36ECF /* FirebaseAuthManager.swift */,
-				45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift */,
-				45B82E2927901C3F00A36ECF /* FirebaseStorageManager.swift */,
+				45B82E2B27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift */,
+				45B82E2927901C3F00A36ECF /* FirebaseStorageManagerImpl.swift */,
 				45B82E1127871AA000A36ECF /* QRCodeGenerator.swift */,
 			);
 			path = Services;
@@ -288,10 +288,10 @@
 			files = (
 				45B82E1227871AA000A36ECF /* QRCodeGenerator.swift in Sources */,
 				45B82E28278C68BF00A36ECF /* UIImageView+Load.swift in Sources */,
-				45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManager.swift in Sources */,
+				45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift in Sources */,
 				45B82DB0277DBFD400A36ECF /* LoginViewController.swift in Sources */,
 				45B82DEC277DDD5100A36ECF /* FirebaseAuthManager.swift in Sources */,
-				45B82E2A27901C3F00A36ECF /* FirebaseStorageManager.swift in Sources */,
+				45B82E2A27901C3F00A36ECF /* FirebaseStorageManagerImpl.swift in Sources */,
 				45B82DF8277E009700A36ECF /* TableListCell.swift in Sources */,
 				45B82D95277B5BBA00A36ECF /* InitialViewController.swift in Sources */,
 				45B82DEF277DE03500A36ECF /* EmployeeMainViewController.swift in Sources */,
