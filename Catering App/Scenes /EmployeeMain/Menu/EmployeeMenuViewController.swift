@@ -14,7 +14,8 @@ class EmployeeMenuViewController: UIViewController {
     let firebaseFirestoreQueryManagerImpl = FirebaseFirestoreQueryManagerImpl()
 
     var menuItemsSortedByCategories = [[MenuItem]]()
-    var filteredMenuItemsSortedByCategories: [[MenuItem]]!
+    lazy var filteredMenuItemsSortedByCategories = [[MenuItem]]()
+    
     var uniqueMenuCategories: [String] = []
     var eventHandler: String = "Firebase"
     var allertActionHandler: String = "Save"
@@ -306,7 +307,7 @@ class EmployeeMenuViewController: UIViewController {
                                                              portion: portionTextField.text ?? "",
                                                              category: categoryTextField.text ?? "",
                                                              chevron: chevronTextField.text ?? "",
-                                                             price: Int(priceTextField.text!) ?? 0) {
+                                                             price: Int(priceTextField.text ?? "") ?? 0) {
             self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
                 self.tableView.reloadData()
             }
@@ -323,7 +324,7 @@ class EmployeeMenuViewController: UIViewController {
                                                                 editedPortion: portionTextField.text ?? "",
                                                                 editedCategory: categoryTextField.text ?? "",
                                                                 editedChevron: chevronTextField.text ?? "",
-                                                                editedPrice: Int(priceTextField.text!) ?? 0) {
+                                                                editedPrice: Int(priceTextField.text ?? "") ?? 0) {
             
             
             self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems {

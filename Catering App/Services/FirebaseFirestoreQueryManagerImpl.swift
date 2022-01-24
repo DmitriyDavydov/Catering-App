@@ -11,6 +11,8 @@ import UIKit
 import FirebaseFirestoreSwift
 
 protocol FirebaseFirestoreQueryManager {
+    var activeTableList: [QRCode] { get set }
+    var activeMenuItems: [MenuItem] { get set }
     func deleteFromActiveTableList(qrIDtoDelete: String)
     func addToActiveTablelist(tableNumber: Int, completion: @escaping (String) -> Void)
     func getActiveTableList(completion: @escaping () -> Void)
@@ -51,8 +53,8 @@ class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
                                                                  "table_number" : tableNumber]) { error in
             
             if error == nil {
-                print("Document has been successfully added with id: \(ref!.documentID)")
-                completion(ref!.documentID)
+                print("Document has been successfully added with id: \(ref?.documentID ?? "")")
+                completion(ref?.documentID ?? "")
             } else {
                 print("ERROR: Document has not been added")
             }
@@ -117,7 +119,7 @@ class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
                                 "price" : price]) { error in
                 
                 if error == nil {
-                    print("Document has been successfully added with id: \(ref!.documentID)")
+                    print("Document has been successfully added with id: \(ref?.documentID ?? "")")
                     completion()
                 } else {
                     print("ERROR: Document has not been added")

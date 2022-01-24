@@ -10,8 +10,8 @@ import FirebaseFirestoreSwift
 
 class TableListViewController: UIViewController {
     // MARK: properties
-    let firebaseFirestoreQueryManager = FirebaseFirestoreQueryManagerImpl()
-    
+    var firebaseFirestoreQueryManagerDelegate: FirebaseFirestoreQueryManager?
+    let firebaseFirestoreQueryManagerImpl = FirebaseFirestoreQueryManagerImpl()
     var firebaseStorageManagerDelegate: FirebaseStorageManager?
     let firebaseStorageManagerImpl = FirebaseStorageManagerImpl()
     let qrCodeGenerator = QRCodeGenerator()
@@ -30,7 +30,7 @@ class TableListViewController: UIViewController {
         makeStyle()
         makeConstraints()
         
-        firebaseFirestoreQueryManager.getActiveTableList {
+        firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
             self.tableView.reloadData()
         }
     }
@@ -41,6 +41,7 @@ class TableListViewController: UIViewController {
         backgroundView.addSubview(createButton)
         backgroundView.addSubview(activityIndicator)
         
+        firebaseFirestoreQueryManagerDelegate = firebaseFirestoreQueryManagerImpl
         firebaseStorageManagerDelegate = firebaseStorageManagerImpl
     }
     
@@ -121,10 +122,10 @@ class TableListViewController: UIViewController {
         var positionsArray = [Int]()
         var i = 1
         
-        if firebaseFirestoreQueryManager.activeTableList.isEmpty == true {
+        if firebaseFirestoreQueryManagerDelegate?.activeTableList.isEmpty == true {
             createTableInDatabase(tableNumber: 1) { return }
         } else {
-            firebaseFirestoreQueryManager.activeTableList.forEach { qrCode in
+            firebaseFirestoreQueryManagerDelegate?.activeTableList.forEach { qrCode in
                 positionsArray.append(qrCode.tableNumber)
             }
             
@@ -145,7 +146,7 @@ class TableListViewController: UIViewController {
     
     // MARK: refreshTableViewRows
     @objc func refreshTableViewRows(_ sender: AnyObject) {
-        firebaseFirestoreQueryManager.getActiveTableList {
+        firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
             self.tableView.reloadData()
             self.refresher.endRefreshing()
         }
@@ -153,20 +154,22 @@ class TableListViewController: UIViewController {
     
     // MARK: createTableInDatabase
     func createTableInDatabase(tableNumber: Int, completion: @escaping () -> Void) {
-        firebaseFirestoreQueryManager.addToActiveTablelist(tableNumber: tableNumber) { id in
+        firebaseFirestoreQueryManagerDelegate?.addToActiveTablelist(tableNumber: tableNumber) { id in
             let qrCodeImage = self.qrCodeGenerator.generateQRCode(from: id)
             
-            self.firebaseStorageManagerImpl.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage!) { (result) in
-                switch result {
-                case .success(let url):
-                    self.firebaseFirestoreQueryManager.updateURLfor(qrCodeID: id, with: url.absoluteString)
-                    self.firebaseFirestoreQueryManager.getActiveTableList {
-                        self.tableView.reloadData()
-                        self.hideActivityIndicator()
+            if let qrCodeImage = qrCodeImage {
+                self.firebaseStorageManagerDelegate?.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage) { (result) in
+                    switch result {
+                    case .success(let url):
+                        self.firebaseFirestoreQueryManagerDelegate?.updateURLfor(qrCodeID: id, with: url.absoluteString)
+                        self.firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
+                            self.tableView.reloadData()
+                            self.hideActivityIndicator()
+                        }
+                    case .failure(let error):
+                        print(error)
+                        
                     }
-                case .failure(let error):
-                    print(error)
-                    
                 }
             }
         }
@@ -230,14 +233,14 @@ class TableListViewController: UIViewController {
 // MARK: TableListVC extensions
 extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return firebaseFirestoreQueryManager.activeTableList.count
+        return firebaseFirestoreQueryManagerDelegate?.activeTableList.count ?? 0
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableListCell", for: indexPath) as! TableListCell
-        let documentAutoID = firebaseFirestoreQueryManager.activeTableList[indexPath.row].autoID
-        let tableNumber = firebaseFirestoreQueryManager.activeTableList[indexPath.row].tableNumber
+        let documentAutoID = firebaseFirestoreQueryManagerDelegate?.activeTableList[indexPath.row].autoID ?? ""
+        let tableNumber = firebaseFirestoreQueryManagerDelegate?.activeTableList[indexPath.row].tableNumber ?? 0
         cell.set(tableNumber: tableNumber, documentID: documentAutoID)
         return cell
     }
@@ -248,23 +251,26 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-            let current = firebaseFirestoreQueryManager.activeTableList[indexPath.row]
-            firebaseFirestoreQueryManager.deleteFromActiveTableList(qrIDtoDelete: current.autoID)
-            firebaseFirestoreQueryManager.getActiveTableList {
+            let current = firebaseFirestoreQueryManagerDelegate?.activeTableList[indexPath.row]
+            firebaseFirestoreQueryManagerDelegate?.deleteFromActiveTableList(qrIDtoDelete: current?.autoID ?? "")
+            firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
                 self.tableView.reloadData()
             }
-            firebaseStorageManagerImpl.deleteQRCode(qrCodeID: current.autoID)
+            firebaseStorageManagerDelegate?.deleteQRCode(qrCodeID: current?.autoID ?? "")
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let current = firebaseFirestoreQueryManager.activeTableList[indexPath.row]
+        let current = firebaseFirestoreQueryManagerDelegate?.activeTableList[indexPath.row]
         
-        if current.qrCodeImageURL.isEmpty{
-            invokeAlert(with: "There is no QR code image for this table")
-        } else {
-            invokeAlert(with: URL(string: current.qrCodeImageURL)!)
+        if let current = current {
+            if current.qrCodeImageURL.isEmpty {
+                invokeAlert(with: "There is no QR code image for this table")
+            } else {
+                invokeAlert(with: URL(string: current.qrCodeImageURL)!)
+            }
         }
+
     }
     
     

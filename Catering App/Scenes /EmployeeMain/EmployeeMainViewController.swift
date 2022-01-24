@@ -9,7 +9,7 @@ import UIKit
 
 class EmployeeMainViewController: UIViewController {
 
-    var bottomNavigationController: UITabBarController!
+    lazy var bottomNavigationController = UITabBarController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +17,6 @@ class EmployeeMainViewController: UIViewController {
     }
     
     func createBottomNavigationController() {
-        bottomNavigationController = UITabBarController()
         bottomNavigationController.tabBar.backgroundColor = .lightGray
         
         let sampleVC = UIViewController()
