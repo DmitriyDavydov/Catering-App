@@ -10,25 +10,22 @@ import FirebaseAuth
 
 
 class FirebaseAuthManager {
-// MARK: login
-    func login (loginEmail: String, loginPassword: String, loginViewController: LoginViewController) {
-        
-        if (!loginEmail.isEmpty && !loginPassword.isEmpty) {
-            FirebaseAuth.Auth.auth().signIn(withEmail: loginEmail, password: loginPassword, completion: { [weak self] result, error in
-                guard let strongSelf = self else { return }
-                if (error != nil) {
-                    print(error)
-                    return
-                } else {
-                    print(result)
+    // MARK: login
+    func login (loginEmail: String, loginPassword: String, completion: @escaping (Any?, Error?) -> Void) {
+            
+            if (!loginEmail.isEmpty && !loginPassword.isEmpty) {
+                FirebaseAuth.Auth.auth().signIn(withEmail: loginEmail, password: loginPassword, completion: { [weak self] result, error in
+                    guard let strongSelf = self else { return }
+                    if (error != nil) {
+                        completion(nil, error)
+                        return
+                    } else {
+                        completion(result, nil)
+                        return
+                    }
                     
-                    let newVC = EmployeeMainViewController()
-                    newVC.modalPresentationStyle = .fullScreen
-                    loginViewController.present(newVC, animated: true, completion: nil)
-                    
-                }
-                
-            })
+                })
+            }
         }
-    }
+    
 }

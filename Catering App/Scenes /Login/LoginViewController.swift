@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class LoginViewController: UIViewController {
     // MARK: properties
@@ -100,6 +101,17 @@ class LoginViewController: UIViewController {
         ])
     }
     
+    // MARK: invokeErrorAlert
+    func invokeErrorAlert() {
+        let alert = UIAlertController(title: "LOGIN ERROR", message: "Please try again.", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: backButtonPressed
     @objc func backButtonPressed() {
         dismiss(animated: true)
@@ -107,9 +119,18 @@ class LoginViewController: UIViewController {
     
     // MARK: loginButtonPressed
     @objc func loginButtonPressed() {
-        firebaseAuthManager.login(loginEmail: emailTextField.text!,
-                                  loginPassword: passwordTextField.text!,
-                                  loginViewController: self)
+        firebaseAuthManager.login(loginEmail: emailTextField.text!, loginPassword: passwordTextField.text!) { result, error in
+            if error != nil {
+                print("LOGIN ERROR")
+                self.invokeErrorAlert()
+            } else {
+                print("Logged in sucessfully")
+                let newVC = EmployeeMainViewController()
+                newVC.modalPresentationStyle = .fullScreen
+                self.present(newVC, animated: true, completion: nil)
+
+            }
+        }
     }
     
 }
