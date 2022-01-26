@@ -13,10 +13,14 @@ import FirebaseFirestoreSwift
 protocol FirebaseFirestoreQueryManager {
     var activeTableList: [QRCode] { get set }
     var activeMenuItems: [MenuItem] { get set }
+    var database: Firestore { get set }
+    
     func deleteFromActiveTableList(qrIDtoDelete: String)
     func addToActiveTablelist(tableNumber: Int, completion: @escaping (String) -> Void)
     func getActiveTableList(completion: @escaping () -> Void)
+    
     func updateURLfor(qrCodeID: String, with url: String)
+    
     func addMenuItemToFirestore(name: String,
                                 description: String,
                                 portion: String,
@@ -34,6 +38,7 @@ protocol FirebaseFirestoreQueryManager {
                                    editedPrice: Int,
                                    completion: @escaping () -> Void)
 }
+
 
 class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
     // MARK: properties

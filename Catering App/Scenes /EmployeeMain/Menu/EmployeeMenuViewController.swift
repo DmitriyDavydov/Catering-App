@@ -10,9 +10,7 @@ import FirebaseFirestoreSwift
 
 class EmployeeMenuViewController: UIViewController {
     // MARK: properties
-    var firebaseFirestoreQueryManagerDelegate: FirebaseFirestoreQueryManager?
-    let firebaseFirestoreQueryManagerImpl = FirebaseFirestoreQueryManagerImpl()
-
+    let firebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager = FirebaseFirestoreQueryManagerImpl()
     var menuItemsSortedByCategories = [[MenuItem]]()
     lazy var filteredMenuItemsSortedByCategories = [[MenuItem]]()
     
@@ -21,22 +19,6 @@ class EmployeeMenuViewController: UIViewController {
     var allertActionHandler: String = "Save"
     var menuItemIdHandler: String = ""
     
-    //alertview
-    let alertBackgroundView = UIView()
-    let alertMainContainer = UIView()
-    let alertTitle = UILabel()
-    let alertSaveButton = UIButton()
-    let alertCloseButton = UIButton()
-    
-    let nameTextField = UITextField()
-    let descriptionTextField = UITextField()
-    let portionTextField = UITextField()
-    let categoryTextField = UITextField()
-    let chevronTextField = UITextField()
-    let priceTextField = UITextField()
-    let textFieldsStack = UIStackView()
-    
-    //screen
     let backgroundView = UIView()
     let tableView = UITableView()
     let searchBar = UISearchBar()
@@ -51,8 +33,8 @@ class EmployeeMenuViewController: UIViewController {
         makeStyle()
         makeConstraints()
         
-        firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
-            self.tableView.reloadData()
+        firebaseFirestoreQueryManagerImpl.getActiveMenuItems { [weak self] in
+            self?.tableView.reloadData()
         }
         
     }
@@ -63,7 +45,6 @@ class EmployeeMenuViewController: UIViewController {
         backgroundView.addSubview(searchBar)
         backgroundView.addSubview(addButton)
         setupLongPressGesture()
-        firebaseFirestoreQueryManagerDelegate = firebaseFirestoreQueryManagerImpl
     }
     
     // MARK: makeStyle
@@ -74,7 +55,7 @@ class EmployeeMenuViewController: UIViewController {
         addButton.setTitle("ADD", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        addButton.addTarget(self, action: #selector(invokeAllertToSaveItem), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(invokeAllertViewControllerToSaveItem), for: .touchUpInside)
         
         searchBar.searchBarStyle = .minimal
         
@@ -130,209 +111,50 @@ class EmployeeMenuViewController: UIViewController {
     
     // MARK: refreshMenuItemsRows
     @objc func refreshMenuItemsRows(_ sender: AnyObject) {
-        firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
-            self.tableView.reloadData()
-            self.refresher.endRefreshing()
+        firebaseFirestoreQueryManagerImpl.getActiveMenuItems { [weak self] in
+            self?.tableView.reloadData()
+            self?.refresher.endRefreshing()
         }
     }
     
-    // MARK: invokeAlertView
-    @objc func invokeAlertView(title: String,
-                               name: String,
-                               description: String,
-                               portion: String,
-                               category: String,
-                               chevron: String,
-                               price: String,
-                               id: String?) {
+    // MARK: invokeAllertViewControllerToSaveItem
+    @objc func invokeAllertViewControllerToSaveItem() {
+        let allertVC = AllertViewController()
+        allertVC.modalPresentationStyle = .fullScreen
+        allertVC.allertActionHandler = allertActionHandler
+        allertVC.alertTitle.text = "ADD NEW ITEM"
+        allertVC.nameTextField.text = "Name"
+        allertVC.descriptionTextField.text = "Description"
+        allertVC.portionTextField.text = "Portion"
+        allertVC.categoryTextField.text = "Category"
+        allertVC.chevronTextField.text = "Chevron"
+        allertVC.priceTextField.text = "Price"
         
-        backgroundView.addSubview(alertBackgroundView)
-        backgroundView.addSubview(alertMainContainer)
-        backgroundView.addSubview(alertTitle)
-        backgroundView.addSubview(alertSaveButton)
-        backgroundView.addSubview(alertCloseButton)
-        backgroundView.addSubview(textFieldsStack)
-        
-        textFieldsStack.addArrangedSubview(nameTextField)
-        textFieldsStack.addArrangedSubview(descriptionTextField)
-        textFieldsStack.addArrangedSubview(portionTextField)
-        textFieldsStack.addArrangedSubview(categoryTextField)
-        textFieldsStack.addArrangedSubview(chevronTextField)
-        textFieldsStack.addArrangedSubview(priceTextField)
-        
-        alertBackgroundView.frame = backgroundView.bounds
-        alertBackgroundView.backgroundColor = .black
-        alertBackgroundView.alpha = 0.8
-        
-        alertMainContainer.backgroundColor = .white
-        alertMainContainer.layer.cornerRadius = 10
-        
-        alertTitle.text = title
-        alertTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        
-        alertSaveButton.setTitle("SAVE", for: .normal)
-        alertSaveButton.setTitleColor(.white, for: .normal)
-        alertSaveButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        alertSaveButton.backgroundColor = .black
-        
-        if allertActionHandler == "Save" {
-            alertSaveButton.removeTarget(self, action: #selector(editMenuItem), for: .touchUpInside)
-            alertSaveButton.addTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
-        }
-        
-        if allertActionHandler == "Edit" {
-            if let id = id {
-                menuItemIdHandler = id
-                alertSaveButton.removeTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
-                alertSaveButton.addTarget(self, action: #selector(editMenuItem), for: .touchUpInside)
-            }
-        }
-        
-        alertCloseButton.setTitle("x", for: .normal)
-        alertCloseButton.setTitleColor(.black, for: .normal)
-        alertCloseButton.titleLabel?.font = UIFont.systemFont(ofSize: 25, weight: .bold)
-        alertCloseButton.addTarget(self, action: #selector(dismissAddingAlert), for: .touchUpInside)
-        
-        create(textField: nameTextField, with: name)
-        create(textField: descriptionTextField, with: description)
-        create(textField: portionTextField, with: portion)
-        create(textField: categoryTextField, with: category)
-        create(textField: chevronTextField, with: chevron)
-        create(textField: priceTextField, with: price)
-        
-        textFieldsStack.alignment = .fill
-        textFieldsStack.distribution = .equalSpacing
-        textFieldsStack.axis = .vertical
-        textFieldsStack.spacing = 10
-        
-        alertMainContainer.translatesAutoresizingMaskIntoConstraints = false
-        alertTitle.translatesAutoresizingMaskIntoConstraints = false
-        alertSaveButton.translatesAutoresizingMaskIntoConstraints = false
-        alertCloseButton.translatesAutoresizingMaskIntoConstraints = false
-        textFieldsStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            alertMainContainer.widthAnchor.constraint(equalToConstant: backgroundView.frame.width * 0.9),
-            alertMainContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 300),
-            alertMainContainer.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            alertMainContainer.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
-            
-            alertTitle.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            alertTitle.topAnchor.constraint(equalTo: alertMainContainer.topAnchor, constant: 10),
-            alertTitle.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
-            alertTitle.widthAnchor.constraint(greaterThanOrEqualToConstant: 100),
-            
-            alertSaveButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            alertSaveButton.bottomAnchor.constraint(equalTo: alertMainContainer.bottomAnchor, constant: -10),
-            alertSaveButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
-            alertSaveButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 90),
-            
-            alertCloseButton.topAnchor.constraint(equalTo: alertMainContainer.topAnchor, constant: 10),
-            alertCloseButton.trailingAnchor.constraint(equalTo: alertMainContainer.trailingAnchor, constant: -10),
-            alertCloseButton.widthAnchor.constraint(equalToConstant: 30),
-            alertCloseButton.heightAnchor.constraint(equalToConstant: 30),
-            
-            textFieldsStack.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            textFieldsStack.topAnchor.constraint(equalTo: alertTitle.bottomAnchor, constant: 20),
-            textFieldsStack.bottomAnchor.constraint(equalTo: alertSaveButton.topAnchor, constant: -30),
-            textFieldsStack.leadingAnchor.constraint(equalTo: alertMainContainer.leadingAnchor, constant: 15),
-            textFieldsStack.trailingAnchor.constraint(equalTo: alertMainContainer.trailingAnchor, constant: -15)
-        ])
-        
-        func create(textField: UITextField, with initialText: String ) {
-            textField.text = initialText
-            textField.backgroundColor = .lightGray
-            textField.textColor = .black
-            textField.clearsOnBeginEditing = true
-            textField.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-        }
-        
+        self.present(allertVC, animated: true, completion: nil)
     }
     
-    // MARK: dismissAlert
-    @objc func dismissAddingAlert() {
-        alertBackgroundView.removeFromSuperview()
-        alertMainContainer.removeFromSuperview()
-        alertTitle.removeFromSuperview()
-        alertSaveButton.removeFromSuperview()
-        alertCloseButton.removeFromSuperview()
+    // MARK: invokeAllertViewControllerToEditItem
+    @objc func invokeAllertViewControllerToEditItem(title: String?,
+                                                    itemName: String?,
+                                                    itemDescription: String?,
+                                                    itemPortion: String?,
+                                                    itemCategory: String?,
+                                                    itemChevron: String?,
+                                                    itemPrice: String?,
+                                                    itemID: String?) {
+        let allertVC = AllertViewController()
+        allertVC.modalPresentationStyle = .fullScreen
+        allertVC.allertActionHandler = allertActionHandler
+        allertVC.alertTitle.text = title
+        allertVC.nameTextField.text = itemName
+        allertVC.descriptionTextField.text = itemDescription
+        allertVC.portionTextField.text = itemPortion
+        allertVC.categoryTextField.text = itemCategory
+        allertVC.chevronTextField.text = itemChevron
+        allertVC.priceTextField.text = itemPrice
+        allertVC.menuItemIdHandler = itemID ?? ""
         
-        nameTextField.removeFromSuperview()
-        descriptionTextField.removeFromSuperview()
-        portionTextField.removeFromSuperview()
-        categoryTextField.removeFromSuperview()
-        chevronTextField.removeFromSuperview()
-        priceTextField.removeFromSuperview()
-        textFieldsStack.removeFromSuperview()
-    }
-    
-    // MARK: invokeAllertToSaveItem
-    @objc func invokeAllertToSaveItem() {
-        allertActionHandler = "Save"
-        invokeAlertView(title: "SAVE NEW ITEM",
-                        name: "Name",
-                        description: "Description",
-                        portion: "Portion",
-                        category: "Category",
-                        chevron: "Chevron",
-                        price: "Price",
-                        id: nil)
-    }
-    
-    // MARK: invokeAllertToEditItem
-    @objc func invokeAllertToEditItem(inputTitle: String,
-                                      inputName: String,
-                                      InputDescription: String,
-                                      inputPortion: String,
-                                      inputCategory: String,
-                                      inputChevron: String,
-                                      inputPrice: String,
-                                      itemID: String) {
-        
-        allertActionHandler = "Edit"
-        invokeAlertView(title: inputTitle,
-                        name: inputName,
-                        description: InputDescription,
-                        portion: inputPortion,
-                        category: inputCategory,
-                        chevron: inputChevron,
-                        price: inputPrice,
-                        id: itemID)
-    }
-    
-    // MARK: saveMenuItem
-    @objc func saveMenuItem() {
-        firebaseFirestoreQueryManagerImpl.addMenuItemToFirestore(name: nameTextField.text ?? "",
-                                                             description: descriptionTextField.text ?? "",
-                                                             portion: portionTextField.text ?? "",
-                                                             category: categoryTextField.text ?? "",
-                                                             chevron: chevronTextField.text ?? "",
-                                                             price: Int(priceTextField.text ?? "") ?? 0) {
-            self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
-                self.tableView.reloadData()
-            }
-        }
-        dismissAddingAlert()
-        eventHandler = "Firebase"
-    }
-    
-    // MARK: editMenuItem
-    @objc func editMenuItem() {
-        firebaseFirestoreQueryManagerImpl.updateMenuItemInFirestore(id: menuItemIdHandler,
-                                                                editedName: nameTextField.text ?? "",
-                                                                editedDescription: descriptionTextField.text ?? "",
-                                                                editedPortion: portionTextField.text ?? "",
-                                                                editedCategory: categoryTextField.text ?? "",
-                                                                editedChevron: chevronTextField.text ?? "",
-                                                                editedPrice: Int(priceTextField.text ?? "") ?? 0) {
-            
-            
-            self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems {
-                self.tableView.reloadData()
-            }
-        }
-        dismissAddingAlert()
-        eventHandler = "Firebase"
+        self.present(allertVC, animated: true, completion: nil)
     }
     
 }
@@ -437,7 +259,7 @@ extension EmployeeMenuViewController: UIGestureRecognizerDelegate {
     
     func setupLongPressGesture() {
         let longPressGesture:UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPress))
-        longPressGesture.minimumPressDuration = 2.0 // 2 second press
+        longPressGesture.minimumPressDuration = 2.0
         longPressGesture.delegate = self
         tableView.addGestureRecognizer(longPressGesture)
     }
@@ -447,18 +269,66 @@ extension EmployeeMenuViewController: UIGestureRecognizerDelegate {
             let touchPoint = gestureRecognizer.location(in: self.tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
                 let currentCell = tableView.cellForRow(at: indexPath) as! EmloyeeMenuTableViewCell
-                
-                invokeAllertToEditItem(inputTitle: "EDIT CURRENT ITEM",
-                                       inputName: currentCell.nameLabel.text ?? "",
-                                       InputDescription: currentCell.descriptionLabel.text ?? "",
-                                       inputPortion: currentCell.portionLabel.text ?? "",
-                                       inputCategory: currentCell.categoryName,
-                                       inputChevron: currentCell.chevronLabel.text ?? "",
-                                       inputPrice: currentCell.priceLabel.text ?? "",
-                                       itemID: currentCell.id)
+                allertActionHandler = "Edit"
+                invokeAllertViewControllerToEditItem(title: "EDIT CURRENT ITEM",
+                                                     itemName: currentCell.nameLabel.text,
+                                                     itemDescription: currentCell.descriptionLabel.text,
+                                                     itemPortion: currentCell.portionLabel.text,
+                                                     itemCategory: currentCell.categoryName,
+                                                     itemChevron: currentCell.chevronLabel.text,
+                                                     itemPrice: currentCell.priceLabel.text,
+                                                     itemID: currentCell.id)
             }
         }
     }
+}
+
+// MARK: VC extensions - AlertViewInvokable
+extension EmployeeMenuViewController: AlertViewInvokable {
+    func saveMenuItem(inputName: String,
+                      inputDescription: String,
+                      inputPortion: String,
+                      inputCategory: String,
+                      inputChevron: String,
+                      inputPrice: Int) {
+        
+        firebaseFirestoreQueryManagerImpl.addMenuItemToFirestore(name: inputName,
+                                                                 description: inputDescription,
+                                                                 portion: inputPortion,
+                                                                 category: inputCategory,
+                                                                 chevron: inputChevron,
+                                                                 price: inputPrice) { [weak self] in
+            self?.firebaseFirestoreQueryManagerImpl.getActiveMenuItems { [weak self] in
+                self?.tableView.reloadData()
+            }
+        }
+        eventHandler = "Firebase"
+    }
+    
+    func editMenuItem(inputID: String,
+                      inputName: String,
+                      inputDescription: String,
+                      inputPortion: String,
+                      inputCategory: String,
+                      inputChevron: String,
+                      inputPrice: Int) {
+        
+        firebaseFirestoreQueryManagerImpl.updateMenuItemInFirestore(id: inputID,
+                                                                    editedName: inputName,
+                                                                    editedDescription: inputDescription,
+                                                                    editedPortion: inputPortion,
+                                                                    editedCategory: inputCategory,
+                                                                    editedChevron: inputChevron,
+                                                                    editedPrice: inputPrice) { [weak self] in
+            
+            self?.firebaseFirestoreQueryManagerImpl.getActiveMenuItems { [weak self] in
+                self?.tableView.reloadData()
+            }
+        }
+        eventHandler = "Firebase"
+        
+    }
+    
     
 }
 

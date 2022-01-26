@@ -146,25 +146,25 @@ class TableListViewController: UIViewController {
     
     // MARK: refreshTableViewRows
     @objc func refreshTableViewRows(_ sender: AnyObject) {
-        firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
-            self.tableView.reloadData()
-            self.refresher.endRefreshing()
+        firebaseFirestoreQueryManagerDelegate?.getActiveTableList { [weak self] in
+            self?.tableView.reloadData()
+            self?.refresher.endRefreshing()
         }
     }
     
     // MARK: createTableInDatabase
     func createTableInDatabase(tableNumber: Int, completion: @escaping () -> Void) {
-        firebaseFirestoreQueryManagerDelegate?.addToActiveTablelist(tableNumber: tableNumber) { id in
-            let qrCodeImage = self.qrCodeGenerator.generateQRCode(from: id)
+        firebaseFirestoreQueryManagerDelegate?.addToActiveTablelist(tableNumber: tableNumber) { [weak self] (id) in
+            let qrCodeImage = self?.qrCodeGenerator.generateQRCode(from: id)
             
             if let qrCodeImage = qrCodeImage {
-                self.firebaseStorageManagerDelegate?.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage) { (result) in
+                self?.firebaseStorageManagerDelegate?.uploadQRCode(qrCodeID: id, qrCodeImage: qrCodeImage) { [weak self] (result) in
                     switch result {
                     case .success(let url):
-                        self.firebaseFirestoreQueryManagerDelegate?.updateURLfor(qrCodeID: id, with: url.absoluteString)
-                        self.firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
-                            self.tableView.reloadData()
-                            self.hideActivityIndicator()
+                        self?.firebaseFirestoreQueryManagerDelegate?.updateURLfor(qrCodeID: id, with: url.absoluteString)
+                        self?.firebaseFirestoreQueryManagerDelegate?.getActiveTableList { [weak self] in
+                            self?.tableView.reloadData()
+                            self?.hideActivityIndicator()
                         }
                     case .failure(let error):
                         print(error)
@@ -253,8 +253,8 @@ extension TableListViewController: UITableViewDelegate, UITableViewDataSource {
         if (editingStyle == .delete) {
             let current = firebaseFirestoreQueryManagerDelegate?.activeTableList[indexPath.row]
             firebaseFirestoreQueryManagerDelegate?.deleteFromActiveTableList(qrIDtoDelete: current?.autoID ?? "")
-            firebaseFirestoreQueryManagerDelegate?.getActiveTableList {
-                self.tableView.reloadData()
+            firebaseFirestoreQueryManagerDelegate?.getActiveTableList { [weak self] in
+                self?.tableView.reloadData()
             }
             firebaseStorageManagerDelegate?.deleteQRCode(qrCodeID: current?.autoID ?? "")
         }
