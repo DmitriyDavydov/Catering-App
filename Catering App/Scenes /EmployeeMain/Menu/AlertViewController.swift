@@ -24,10 +24,10 @@ protocol AlertViewInvokable {
                       inputPrice: Int)
 }
 
-class AllertViewController: UIViewController {
+class AlertViewController: UIViewController {
     // MARK: properties
     var eventHandler: String = "Firebase"
-    var allertActionHandler: String = "Save"
+    var alertActionHandler: String = "Save"
     var menuItemIdHandler: String = ""
     
     //delegate
@@ -91,12 +91,12 @@ class AllertViewController: UIViewController {
         alertSaveButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         alertSaveButton.backgroundColor = .black
         
-        if allertActionHandler == "Save" {
+        if alertActionHandler == "Save" {
             alertSaveButton.removeTarget(self, action: #selector(editMenuItem), for: .touchUpInside)
             alertSaveButton.addTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
         }
         
-        if allertActionHandler == "Edit" {
+        if alertActionHandler == "Edit" {
                 alertSaveButton.removeTarget(self, action: #selector(saveMenuItem), for: .touchUpInside)
                 alertSaveButton.addTarget(self, action: #selector(editMenuItem), for: .touchUpInside)
         }

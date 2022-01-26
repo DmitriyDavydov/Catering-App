@@ -36,7 +36,7 @@
 		45B8CDC22791B4EA00323214 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDC12791B4EA00323214 /* MenuItem.swift */; };
 		45B8CDC6279EDBAF00323214 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45B8CDC8279EDBAF00323214 /* Localizable.strings */; };
 		45B8CDCC279EF03400323214 /* Localizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDCB279EF03400323214 /* Localizer.swift */; };
-		45B8CDCE279F0CB700323214 /* AllertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDCD279F0CB700323214 /* AllertViewController.swift */; };
+		45B8CDCE279F0CB700323214 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDCD279F0CB700323214 /* AlertViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,7 +63,7 @@
 		45B8CDC12791B4EA00323214 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		45B8CDC7279EDBAF00323214 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		45B8CDCB279EF03400323214 /* Localizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizer.swift; sourceTree = "<group>"; };
-		45B8CDCD279F0CB700323214 /* AllertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllertViewController.swift; sourceTree = "<group>"; };
+		45B8CDCD279F0CB700323214 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,7 +180,7 @@
 			children = (
 				45B82E2F2790274B00A36ECF /* EmployeeMenuViewController.swift */,
 				45B82E31279027A900A36ECF /* EmloyeeMenuTableViewCell.swift */,
-				45B8CDCD279F0CB700323214 /* AllertViewController.swift */,
+				45B8CDCD279F0CB700323214 /* AlertViewController.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -298,7 +298,7 @@
 			files = (
 				45B82E1227871AA000A36ECF /* QRCodeGenerator.swift in Sources */,
 				45B82E28278C68BF00A36ECF /* UIImageView+Load.swift in Sources */,
-				45B8CDCE279F0CB700323214 /* AllertViewController.swift in Sources */,
+				45B8CDCE279F0CB700323214 /* AlertViewController.swift in Sources */,
 				45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift in Sources */,
 				45B82DB0277DBFD400A36ECF /* LoginViewController.swift in Sources */,
 				45B82DEC277DDD5100A36ECF /* FirebaseAuthManager.swift in Sources */,

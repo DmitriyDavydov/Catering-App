@@ -37,6 +37,7 @@ protocol FirebaseFirestoreQueryManager {
                                    editedChevron: String,
                                    editedPrice: Int,
                                    completion: @escaping () -> Void)
+    func deleteFromActiveMenuItems(id: String)
 }
 
 
@@ -190,6 +191,11 @@ class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
             }
         }
         
+    }
+    
+    // MARK: deleteFromActiveMenuItems
+    func deleteFromActiveMenuItems(id: String) {
+        self.database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item").document(id).delete()
     }
     
     

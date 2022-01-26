@@ -16,7 +16,7 @@ class EmployeeMenuViewController: UIViewController {
     
     var uniqueMenuCategories: [String] = []
     var eventHandler: String = "Firebase"
-    var allertActionHandler: String = "Save"
+    var alertActionHandler: String = "Save"
     var menuItemIdHandler: String = ""
     
     let backgroundView = UIView()
@@ -55,7 +55,7 @@ class EmployeeMenuViewController: UIViewController {
         addButton.setTitle("ADD", for: .normal)
         addButton.setTitleColor(.black, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        addButton.addTarget(self, action: #selector(invokeAllertViewControllerToSaveItem), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(invokeAlertViewControllerToSaveItem), for: .touchUpInside)
         
         searchBar.searchBarStyle = .minimal
         
@@ -117,24 +117,24 @@ class EmployeeMenuViewController: UIViewController {
         }
     }
     
-    // MARK: invokeAllertViewControllerToSaveItem
-    @objc func invokeAllertViewControllerToSaveItem() {
-        let allertVC = AllertViewController()
-        allertVC.modalPresentationStyle = .fullScreen
-        allertVC.allertActionHandler = allertActionHandler
-        allertVC.alertTitle.text = "ADD NEW ITEM"
-        allertVC.nameTextField.text = "Name"
-        allertVC.descriptionTextField.text = "Description"
-        allertVC.portionTextField.text = "Portion"
-        allertVC.categoryTextField.text = "Category"
-        allertVC.chevronTextField.text = "Chevron"
-        allertVC.priceTextField.text = "Price"
+    // MARK: invokeAlertViewControllerToSaveItem
+    @objc func invokeAlertViewControllerToSaveItem() {
+        let alertVC = AlertViewController()
+        alertVC.modalPresentationStyle = .fullScreen
+        alertVC.alertActionHandler = alertActionHandler
+        alertVC.alertTitle.text = "ADD NEW ITEM"
+        alertVC.nameTextField.text = "Name"
+        alertVC.descriptionTextField.text = "Description"
+        alertVC.portionTextField.text = "Portion"
+        alertVC.categoryTextField.text = "Category"
+        alertVC.chevronTextField.text = "Chevron"
+        alertVC.priceTextField.text = "Price"
         
-        self.present(allertVC, animated: true, completion: nil)
+        self.present(alertVC, animated: true, completion: nil)
     }
     
-    // MARK: invokeAllertViewControllerToEditItem
-    @objc func invokeAllertViewControllerToEditItem(title: String?,
+    // MARK: invokeAlertViewControllerToEditItem
+    @objc func invokeAlertViewControllerToEditItem(title: String?,
                                                     itemName: String?,
                                                     itemDescription: String?,
                                                     itemPortion: String?,
@@ -142,19 +142,19 @@ class EmployeeMenuViewController: UIViewController {
                                                     itemChevron: String?,
                                                     itemPrice: String?,
                                                     itemID: String?) {
-        let allertVC = AllertViewController()
-        allertVC.modalPresentationStyle = .fullScreen
-        allertVC.allertActionHandler = allertActionHandler
-        allertVC.alertTitle.text = title
-        allertVC.nameTextField.text = itemName
-        allertVC.descriptionTextField.text = itemDescription
-        allertVC.portionTextField.text = itemPortion
-        allertVC.categoryTextField.text = itemCategory
-        allertVC.chevronTextField.text = itemChevron
-        allertVC.priceTextField.text = itemPrice
-        allertVC.menuItemIdHandler = itemID ?? ""
+        let alertVC = AlertViewController()
+        alertVC.modalPresentationStyle = .fullScreen
+        alertVC.alertActionHandler = alertActionHandler
+        alertVC.alertTitle.text = title
+        alertVC.nameTextField.text = itemName
+        alertVC.descriptionTextField.text = itemDescription
+        alertVC.portionTextField.text = itemPortion
+        alertVC.categoryTextField.text = itemCategory
+        alertVC.chevronTextField.text = itemChevron
+        alertVC.priceTextField.text = itemPrice
+        alertVC.menuItemIdHandler = itemID ?? ""
         
-        self.present(allertVC, animated: true, completion: nil)
+        self.present(alertVC, animated: true, completion: nil)
     }
     
 }
@@ -226,6 +226,28 @@ extension EmployeeMenuViewController: UITableViewDelegate, UITableViewDataSource
         return label
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            
+            let current = filteredMenuItemsSortedByCategories[indexPath.section][indexPath.row]
+            let alert = UIAlertController(title: "DELETE ITEM", message: "Please confirm item deletion, it will be deleted inevitably", preferredStyle: .alert)
+
+            alert.addAction(UIAlertAction(title: "CLOSE", style: .default, handler: { action in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            
+            alert.addAction(UIAlertAction(title: "DELETE", style: .default, handler: { action in
+                self.firebaseFirestoreQueryManagerImpl.deleteFromActiveMenuItems(id: current.autoID)
+                self.firebaseFirestoreQueryManagerImpl.getActiveMenuItems { [weak self] in
+                    self?.tableView.reloadData()
+                }
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+    }
+    
 }
 
 // MARK: VC extensions - SearchBar
@@ -269,8 +291,8 @@ extension EmployeeMenuViewController: UIGestureRecognizerDelegate {
             let touchPoint = gestureRecognizer.location(in: self.tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
                 let currentCell = tableView.cellForRow(at: indexPath) as! EmloyeeMenuTableViewCell
-                allertActionHandler = "Edit"
-                invokeAllertViewControllerToEditItem(title: "EDIT CURRENT ITEM",
+                alertActionHandler = "Edit"
+                invokeAlertViewControllerToEditItem(title: "EDIT CURRENT ITEM",
                                                      itemName: currentCell.nameLabel.text,
                                                      itemDescription: currentCell.descriptionLabel.text,
                                                      itemPortion: currentCell.portionLabel.text,
