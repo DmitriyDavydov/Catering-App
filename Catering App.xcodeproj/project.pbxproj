@@ -37,6 +37,11 @@
 		45B8CDC6279EDBAF00323214 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45B8CDC8279EDBAF00323214 /* Localizable.strings */; };
 		45B8CDCC279EF03400323214 /* Localizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDCB279EF03400323214 /* Localizer.swift */; };
 		45B8CDCE279F0CB700323214 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDCD279F0CB700323214 /* AlertViewController.swift */; };
+		45B8CDD027A1877200323214 /* CurrentTablesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDCF27A1877200323214 /* CurrentTablesViewController.swift */; };
+		45B8CDD227A1948300323214 /* CurrentTablesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD127A1948300323214 /* CurrentTablesTableViewCell.swift */; };
+		45B8CDD427A2B21E00323214 /* InvokableMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD327A2B21E00323214 /* InvokableMenuViewController.swift */; };
+		45B8CDD627A2C18900323214 /* InvokableMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD527A2C18900323214 /* InvokableMenuTableViewCell.swift */; };
+		45B8CDD827A2DF2B00323214 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD727A2DF2B00323214 /* Order.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +69,11 @@
 		45B8CDC7279EDBAF00323214 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		45B8CDCB279EF03400323214 /* Localizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizer.swift; sourceTree = "<group>"; };
 		45B8CDCD279F0CB700323214 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
+		45B8CDCF27A1877200323214 /* CurrentTablesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTablesViewController.swift; sourceTree = "<group>"; };
+		45B8CDD127A1948300323214 /* CurrentTablesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTablesTableViewCell.swift; sourceTree = "<group>"; };
+		45B8CDD327A2B21E00323214 /* InvokableMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvokableMenuViewController.swift; sourceTree = "<group>"; };
+		45B8CDD527A2C18900323214 /* InvokableMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvokableMenuTableViewCell.swift; sourceTree = "<group>"; };
+		45B8CDD727A2DF2B00323214 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +181,10 @@
 		45B82DF2277DFD6100A36ECF /* CurrentTables */ = {
 			isa = PBXGroup;
 			children = (
+				45B8CDCF27A1877200323214 /* CurrentTablesViewController.swift */,
+				45B8CDD127A1948300323214 /* CurrentTablesTableViewCell.swift */,
+				45B8CDD327A2B21E00323214 /* InvokableMenuViewController.swift */,
+				45B8CDD527A2C18900323214 /* InvokableMenuTableViewCell.swift */,
 			);
 			path = CurrentTables;
 			sourceTree = "<group>";
@@ -199,6 +213,7 @@
 			children = (
 				45B82DFF2781DF0800A36ECF /* QRCode.swift */,
 				45B8CDC12791B4EA00323214 /* MenuItem.swift */,
+				45B8CDD727A2DF2B00323214 /* Order.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -306,12 +321,17 @@
 				45B82DF8277E009700A36ECF /* TableListCell.swift in Sources */,
 				45B82D95277B5BBA00A36ECF /* InitialViewController.swift in Sources */,
 				45B82DEF277DE03500A36ECF /* EmployeeMainViewController.swift in Sources */,
+				45B8CDD627A2C18900323214 /* InvokableMenuTableViewCell.swift in Sources */,
 				45B82E302790274B00A36ECF /* EmployeeMenuViewController.swift in Sources */,
 				45B82E32279027A900A36ECF /* EmloyeeMenuTableViewCell.swift in Sources */,
 				453FA7332774B56900978998 /* AppDelegate.swift in Sources */,
+				45B8CDD027A1877200323214 /* CurrentTablesViewController.swift in Sources */,
 				453FA7352774B56900978998 /* SceneDelegate.swift in Sources */,
 				45B8CDC22791B4EA00323214 /* MenuItem.swift in Sources */,
+				45B8CDD227A1948300323214 /* CurrentTablesTableViewCell.swift in Sources */,
+				45B8CDD427A2B21E00323214 /* InvokableMenuViewController.swift in Sources */,
 				45B82DF6277DFE7F00A36ECF /* TableListViewController.swift in Sources */,
+				45B8CDD827A2DF2B00323214 /* Order.swift in Sources */,
 				45B8CDCC279EF03400323214 /* Localizer.swift in Sources */,
 				45B82E002781DF0800A36ECF /* QRCode.swift in Sources */,
 			);

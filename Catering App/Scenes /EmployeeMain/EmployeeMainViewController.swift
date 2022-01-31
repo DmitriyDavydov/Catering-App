@@ -19,8 +19,8 @@ class EmployeeMainViewController: UIViewController {
     func createBottomNavigationController() {
         bottomNavigationController.tabBar.backgroundColor = .lightGray
         
-        let sampleVC = UIViewController()
-        sampleVC.title = "Sample VC"
+        let currentTablesViewController = CurrentTablesViewController()
+        currentTablesViewController.title = "CURRENT TABLES"
         
         let employeeMenuVievController = EmployeeMenuViewController()
         employeeMenuVievController.title = "MENU"
@@ -28,7 +28,9 @@ class EmployeeMainViewController: UIViewController {
         let tableListViewController = TableListViewController()
         tableListViewController.title = "TABLE LIST"
         
-        bottomNavigationController.viewControllers = [sampleVC, employeeMenuVievController, tableListViewController]
+        bottomNavigationController.viewControllers = [currentTablesViewController,
+                                                      employeeMenuVievController,
+                                                      tableListViewController]
         self.view.addSubview(bottomNavigationController.view)
     }
     

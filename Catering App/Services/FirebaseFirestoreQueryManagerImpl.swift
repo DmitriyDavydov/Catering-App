@@ -13,6 +13,7 @@ import FirebaseFirestoreSwift
 protocol FirebaseFirestoreQueryManager {
     var activeTableList: [QRCode] { get set }
     var activeMenuItems: [MenuItem] { get set }
+    var activeOrders: [Order] { get set }
     var database: Firestore { get set }
     
     func deleteFromActiveTableList(qrIDtoDelete: String)
@@ -38,6 +39,15 @@ protocol FirebaseFirestoreQueryManager {
                                    editedPrice: Int,
                                    completion: @escaping () -> Void)
     func deleteFromActiveMenuItems(id: String)
+    
+    func getCurrentTablesOrders(completion: @escaping () -> Void)
+    func addToCurrentTablesOrders(tableNumber: Int,
+                                  menuItemID: String,
+                                  menuItemName: String,
+                                  menuItemQuantity: Int,
+                                  balance: Int,
+                                  completion: @escaping () -> Void)
+    func deleteFromCurrentTablesOrders(id: String)
 }
 
 
@@ -45,6 +55,7 @@ class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
     // MARK: properties
     var activeTableList = [QRCode]()
     var activeMenuItems = [MenuItem]()
+    var activeOrders = [Order]()
     var database = Firestore.firestore()
     
     // MARK: deleteFromActiveTableList
@@ -198,5 +209,70 @@ class FirebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager {
         self.database.collection("menus").document("C5eLCnstrKHXxgi2WRfI").collection("menu_item").document(id).delete()
     }
     
+    
+    
+    
+    
+    
+    
+    
+    // MARK: getCurrentTablesOrders
+    func getCurrentTablesOrders(completion: @escaping () -> Void) {
+        self.database.collection("orders").getDocuments { snapshot, error in
+            
+            if error == nil {
+                
+                if let snapshot = snapshot {
+                    
+                    self.activeOrders = snapshot.documents.map { document in
+                        
+                        return Order(autoID: document.documentID,
+                                     tableNumber: document["table_id"] as? Int ?? 0,
+                                     menuItemID: document["menu_item_id"] as? String ?? "",
+                                     menuItemName: document["menu_item_name"] as? String ?? "",
+                                     menuItemQuantity: document["menu_item_quantity"] as? Int ?? 0,
+                                     balance:  document["balance"] as? Int ?? 0)
+                    }
+                    completion()
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
+    
+    // MARK: addToCurrentTablesOrders
+    func addToCurrentTablesOrders(tableNumber: Int,
+                                  menuItemID: String,
+                                  menuItemName: String,
+                                  menuItemQuantity: Int,
+                                  balance: Int,
+                                  completion: @escaping () -> Void) {
+        var ref: DocumentReference? = nil
+        
+        ref = database.collection("orders").addDocument(data: ["table_id" : tableNumber,
+                                                               "menu_items_id" : menuItemID,
+                                                               "menu_item_name" : menuItemName,
+                                                               "menu_item_quantity" : menuItemQuantity,
+                                                               "balance" : balance]) { error in
+            
+            if error == nil {
+                print("Document has been successfully added with id: \(ref?.documentID ?? "")")
+                completion()
+            } else {
+                print("ERROR: Document has not been added")
+            }
+        }
+        
+        
+    }
+    
+    
+    // MARK: deleteFromCurrentTablesOrders
+    func deleteFromCurrentTablesOrders(id: String) {
+        self.database.collection("orders").document(id).delete()
+    }
     
 }
