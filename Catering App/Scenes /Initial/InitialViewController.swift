@@ -34,6 +34,7 @@ class InitialViewController: UIViewController {
         backgroundView.backgroundColor = .white
         
         qrCodeArea.backgroundColor = .black
+        qrCodeArea.addTarget(self, action: #selector(continueAsCustomerPressed), for: .touchUpInside)
         
         signInAsEmployeeButton.setTitle("Press to continue as an employee", for: .normal)
         signInAsEmployeeButton.setTitleColor(.systemBlue, for: .normal)
@@ -62,6 +63,13 @@ class InitialViewController: UIViewController {
         let newVC = LoginViewController()
         newVC.modalPresentationStyle = .fullScreen
         present(newVC, animated: true, completion: nil)
-    }   
+    }
+    
+    // MARK: continueAsCustomerPressed
+    @objc func continueAsCustomerPressed() {
+        let newVC = CustomerMainViewController()
+        newVC.modalPresentationStyle = .fullScreen
+        present(newVC, animated: true, completion: nil)
+    }
     
 }

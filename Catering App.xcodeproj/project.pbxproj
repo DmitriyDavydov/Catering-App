@@ -42,6 +42,10 @@
 		45B8CDD427A2B21E00323214 /* InvokableMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD327A2B21E00323214 /* InvokableMenuViewController.swift */; };
 		45B8CDD627A2C18900323214 /* InvokableMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD527A2C18900323214 /* InvokableMenuTableViewCell.swift */; };
 		45B8CDD827A2DF2B00323214 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDD727A2DF2B00323214 /* Order.swift */; };
+		45B8CDDB27A926D800323214 /* CustomerMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDDA27A926D800323214 /* CustomerMainViewController.swift */; };
+		45B8CDDE27A9273F00323214 /* CustomerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDDD27A9273F00323214 /* CustomerMenuViewController.swift */; };
+		45B8CDE127A931F000323214 /* CheckOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDE027A931F000323214 /* CheckOutViewController.swift */; };
+		45B8CDE327A93BC900323214 /* CheckOutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDE227A93BC900323214 /* CheckOutTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +78,10 @@
 		45B8CDD327A2B21E00323214 /* InvokableMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvokableMenuViewController.swift; sourceTree = "<group>"; };
 		45B8CDD527A2C18900323214 /* InvokableMenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvokableMenuTableViewCell.swift; sourceTree = "<group>"; };
 		45B8CDD727A2DF2B00323214 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
+		45B8CDDA27A926D800323214 /* CustomerMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerMainViewController.swift; sourceTree = "<group>"; };
+		45B8CDDD27A9273F00323214 /* CustomerMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerMenuViewController.swift; sourceTree = "<group>"; };
+		45B8CDE027A931F000323214 /* CheckOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutViewController.swift; sourceTree = "<group>"; };
+		45B8CDE227A93BC900323214 /* CheckOutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +140,7 @@
 		45B82D92277B5B9200A36ECF /* Scenes  */ = {
 			isa = PBXGroup;
 			children = (
+				45B8CDD927A9268B00323214 /* CustomerMain */,
 				45B82DED277DE01400A36ECF /* EmployeeMain */,
 				45B82DAE277DBFAE00A36ECF /* Login */,
 				45B82D93277B5BA000A36ECF /* Initial */,
@@ -226,6 +235,33 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		45B8CDD927A9268B00323214 /* CustomerMain */ = {
+			isa = PBXGroup;
+			children = (
+				45B8CDDA27A926D800323214 /* CustomerMainViewController.swift */,
+				45B8CDDF27A9315A00323214 /* CheckOut */,
+				45B8CDDC27A9271C00323214 /* Menu */,
+			);
+			path = CustomerMain;
+			sourceTree = "<group>";
+		};
+		45B8CDDC27A9271C00323214 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				45B8CDDD27A9273F00323214 /* CustomerMenuViewController.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		45B8CDDF27A9315A00323214 /* CheckOut */ = {
+			isa = PBXGroup;
+			children = (
+				45B8CDE027A931F000323214 /* CheckOutViewController.swift */,
+				45B8CDE227A93BC900323214 /* CheckOutTableViewCell.swift */,
+			);
+			path = CheckOut;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -313,11 +349,14 @@
 			files = (
 				45B82E1227871AA000A36ECF /* QRCodeGenerator.swift in Sources */,
 				45B82E28278C68BF00A36ECF /* UIImageView+Load.swift in Sources */,
+				45B8CDE127A931F000323214 /* CheckOutViewController.swift in Sources */,
+				45B8CDDE27A9273F00323214 /* CustomerMenuViewController.swift in Sources */,
 				45B8CDCE279F0CB700323214 /* AlertViewController.swift in Sources */,
 				45B82E2C27901F2B00A36ECF /* FirebaseFirestoreQueryManagerImpl.swift in Sources */,
 				45B82DB0277DBFD400A36ECF /* LoginViewController.swift in Sources */,
 				45B82DEC277DDD5100A36ECF /* FirebaseAuthManager.swift in Sources */,
 				45B82E2A27901C3F00A36ECF /* FirebaseStorageManagerImpl.swift in Sources */,
+				45B8CDE327A93BC900323214 /* CheckOutTableViewCell.swift in Sources */,
 				45B82DF8277E009700A36ECF /* TableListCell.swift in Sources */,
 				45B82D95277B5BBA00A36ECF /* InitialViewController.swift in Sources */,
 				45B82DEF277DE03500A36ECF /* EmployeeMainViewController.swift in Sources */,
@@ -329,6 +368,7 @@
 				453FA7352774B56900978998 /* SceneDelegate.swift in Sources */,
 				45B8CDC22791B4EA00323214 /* MenuItem.swift in Sources */,
 				45B8CDD227A1948300323214 /* CurrentTablesTableViewCell.swift in Sources */,
+				45B8CDDB27A926D800323214 /* CustomerMainViewController.swift in Sources */,
 				45B8CDD427A2B21E00323214 /* InvokableMenuViewController.swift in Sources */,
 				45B82DF6277DFE7F00A36ECF /* TableListViewController.swift in Sources */,
 				45B8CDD827A2DF2B00323214 /* Order.swift in Sources */,

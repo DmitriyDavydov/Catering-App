@@ -10,7 +10,6 @@ import UIKit
 class CurrentTablesViewController: UIViewController {
     // MARK: properties
     let firebaseFirestoreQueryManagerImpl: FirebaseFirestoreQueryManager = FirebaseFirestoreQueryManagerImpl()
-    //var ordersSortedByCategories = [[Order]]()
     
     let backgroundView = UIView()
     let tableView = UITableView()
