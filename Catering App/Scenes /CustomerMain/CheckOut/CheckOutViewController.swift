@@ -24,17 +24,16 @@ class CheckOutViewController: UIViewController {
     }
     
     var tipButtonStatus: ButtonPressed = .notPressed
+    var rawTotalSumHandler = 0
     let tipsLabel = UILabel()
     var leftTipButton = UIButton()
     var middleTipButton = UIButton()
     var rightTipButton = UIButton()
     var tipButtonsStack = UIStackView()
-    
     let totalLabel = UILabel()
     var totalSumLabel = UILabel()
-    
     var payButton = UIButton()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,7 +49,7 @@ class CheckOutViewController: UIViewController {
         firebaseFirestoreQueryManagerImpl.getCurrentTablesOrders { [weak self] in
             self?.tableView.reloadData()
         }
-
+        
     }
     
     // MARK: make
@@ -59,7 +58,7 @@ class CheckOutViewController: UIViewController {
         tipButtonsStack.addArrangedSubview(leftTipButton)
         tipButtonsStack.addArrangedSubview(middleTipButton)
         tipButtonsStack.addArrangedSubview(rightTipButton)
-
+        
         backgroundView.addSubview(header)
         backgroundView.addSubview(tipsLabel)
         backgroundView.addSubview(tipButtonsStack)
@@ -73,14 +72,14 @@ class CheckOutViewController: UIViewController {
         backgroundView.frame = view.bounds
         backgroundView.backgroundColor = .white
         
-        header.text = "TABLE NUMBER: 10"
+        header.text = "TABLE NUMBER: \(tableNumberHandler)"
         header.textAlignment = .left
         header.font = UIFont.systemFont(ofSize: 25, weight: .black)
         
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = true
         tableView.allowsMultipleSelectionDuringEditing = true
-
+        
         refresher.attributedTitle = NSAttributedString(string: "Refreshing order")
         refresher.addTarget(self, action: #selector(self.refreshMenuItemsRows(_:)), for: .valueChanged)
         
@@ -216,7 +215,7 @@ class CheckOutViewController: UIViewController {
                 rightTipButton.isHidden = false
             }
         }
-
+        
     }
     
     // MARK: fifteenPercentTipAdded
@@ -242,7 +241,7 @@ class CheckOutViewController: UIViewController {
                 rightTipButton.isHidden = false
             }
         }
-
+        
     }
     
     // MARK: twentyPercentTipAdded
@@ -277,19 +276,16 @@ class CheckOutViewController: UIViewController {
         if let totalSum = totalSumLabel.text {
             tempTotalBalance = Int(totalSum) ?? 999999
         }
+        rawTotalSumHandler = tempTotalBalance
         totalSumLabel.text = String(tempTotalBalance + tempTotalBalance * percent / 100)
     }
     
     // MARK: decreaseTips
     func decreaseTips(percent: Int) {
-        var tempTotalBalance = 0
-        if let totalSum = totalSumLabel.text {
-            tempTotalBalance = Int(totalSum) ?? 999999
-        }
-        totalSumLabel.text = String(tempTotalBalance * 100 / 100 - percent)
+        totalSumLabel.text = String(rawTotalSumHandler)
     }
-
-
+    
+    
 }
 
 // MARK: VC extensions - TableView
@@ -323,14 +319,14 @@ extension CheckOutViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 filteredOrdersList.append(tempArray)
             }
-      
+            
             var tempBalance = 0
             filteredOrdersList[section].forEach { order in
                 tempBalance += order.balance
             }
             totalSumLabel.text = String(tempBalance)
             
-           
+            
             return filteredOrdersList[section].count
             
         }
@@ -362,14 +358,12 @@ extension CheckOutViewController: UITableViewDelegate, UITableViewDataSource {
             tempCellBalance = Int(currentCellBalance) ?? 999999
         }
         
-        
         if currentCell.cellStatus == .selected {
             currentCell.cellStatus = .notSelected
             currentCell.checkbox.backgroundColor = .lightGray
-          
+            
             tempTotalBalance -= tempCellBalance
             totalSumLabel.text = String(tempTotalBalance)
-            
             
         } else {
             currentCell.cellStatus = .selected
@@ -383,6 +377,6 @@ extension CheckOutViewController: UITableViewDelegate, UITableViewDataSource {
         
     }
     
-     
-}
     
+}
+
