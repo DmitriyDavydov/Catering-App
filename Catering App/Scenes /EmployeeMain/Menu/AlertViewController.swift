@@ -116,7 +116,7 @@ class AlertViewController: UIViewController {
         textFieldsStack.alignment = .fill
         textFieldsStack.distribution = .equalSpacing
         textFieldsStack.axis = .vertical
-        textFieldsStack.spacing = 10
+        textFieldsStack.spacing = 5
     }
     
     // MARK: makeConstraints

@@ -123,12 +123,31 @@ class EmployeeMenuViewController: UIViewController {
         alertVC.modalPresentationStyle = .fullScreen
         alertVC.alertActionHandler = alertActionHandler
         alertVC.alertTitle.text = "ADD NEW ITEM"
-        alertVC.nameTextField.text = "Name"
-        alertVC.descriptionTextField.text = "Description"
-        alertVC.portionTextField.text = "Portion"
-        alertVC.categoryTextField.text = "Category"
-        alertVC.chevronTextField.text = "Chevron"
-        alertVC.priceTextField.text = "Price"
+
+        alertVC.nameTextField.attributedPlaceholder = NSAttributedString(
+            string: "Name",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
+        alertVC.descriptionTextField.attributedPlaceholder = NSAttributedString(
+            string: "Description",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
+        alertVC.portionTextField.attributedPlaceholder = NSAttributedString(
+            string: "Portion",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
+        alertVC.categoryTextField.attributedPlaceholder = NSAttributedString(
+            string: "Category",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
+        alertVC.chevronTextField.attributedPlaceholder = NSAttributedString(
+            string: "Chevron",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
+        alertVC.priceTextField.attributedPlaceholder = NSAttributedString(
+            string: "Price",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+        )
         
         self.present(alertVC, animated: true, completion: nil)
     }
@@ -153,7 +172,6 @@ class EmployeeMenuViewController: UIViewController {
         alertVC.chevronTextField.text = itemChevron
         alertVC.priceTextField.text = itemPrice
         alertVC.menuItemIdHandler = itemID ?? ""
-        
         self.present(alertVC, animated: true, completion: nil)
     }
     

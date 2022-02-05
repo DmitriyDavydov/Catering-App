@@ -46,6 +46,7 @@
 		45B8CDDE27A9273F00323214 /* CustomerMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDDD27A9273F00323214 /* CustomerMenuViewController.swift */; };
 		45B8CDE127A931F000323214 /* CheckOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDE027A931F000323214 /* CheckOutViewController.swift */; };
 		45B8CDE327A93BC900323214 /* CheckOutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDE227A93BC900323214 /* CheckOutTableViewCell.swift */; };
+		45B8CDE727AD3F6100323214 /* QRReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8CDE627AD3F6000323214 /* QRReaderViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,7 @@
 		45B8CDDD27A9273F00323214 /* CustomerMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerMenuViewController.swift; sourceTree = "<group>"; };
 		45B8CDE027A931F000323214 /* CheckOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutViewController.swift; sourceTree = "<group>"; };
 		45B8CDE227A93BC900323214 /* CheckOutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutTableViewCell.swift; sourceTree = "<group>"; };
+		45B8CDE627AD3F6000323214 /* QRReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRReaderViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 				45B82E2927901C3F00A36ECF /* FirebaseStorageManagerImpl.swift */,
 				45B82E1127871AA000A36ECF /* QRCodeGenerator.swift */,
 				45B8CDCB279EF03400323214 /* Localizer.swift */,
+				45B8CDE627AD3F6000323214 /* QRReaderViewController.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				45B8CDE327A93BC900323214 /* CheckOutTableViewCell.swift in Sources */,
 				45B82DF8277E009700A36ECF /* TableListCell.swift in Sources */,
 				45B82D95277B5BBA00A36ECF /* InitialViewController.swift in Sources */,
+				45B8CDE727AD3F6100323214 /* QRReaderViewController.swift in Sources */,
 				45B82DEF277DE03500A36ECF /* EmployeeMainViewController.swift in Sources */,
 				45B8CDD627A2C18900323214 /* InvokableMenuTableViewCell.swift in Sources */,
 				45B82E302790274B00A36ECF /* EmployeeMenuViewController.swift in Sources */,

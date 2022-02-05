@@ -117,7 +117,7 @@ class EmloyeeMenuTableViewCell: UITableViewCell {
             portionLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 3),
             portionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
             portionLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
-            portionLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 70),
+            portionLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 100),
         ])
     }
     

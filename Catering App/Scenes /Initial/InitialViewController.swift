@@ -39,7 +39,6 @@ class InitialViewController: UIViewController {
         signInAsEmployeeButton.setTitle("Press to continue as an employee", for: .normal)
         signInAsEmployeeButton.setTitleColor(.systemBlue, for: .normal)
         signInAsEmployeeButton.addTarget(self, action: #selector(continueAsEmployeePressed), for: .touchUpInside)
-        
     }
     
     // MARK: makeConstraints

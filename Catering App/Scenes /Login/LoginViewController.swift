@@ -51,28 +51,37 @@ class LoginViewController: UIViewController {
         backButton.setTitleColor(.systemBlue, for: .normal)
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         
-        loginLabel.text = "Enter e-mail and password to log in"
+        loginLabel.text = "Enter e-mail and password to sign in"
         loginLabel.textColor = .black
         loginLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         
         textFieldsStack.alignment = .center
         textFieldsStack.distribution = .fillProportionally
         textFieldsStack.axis = .vertical
-        textFieldsStack.spacing = 10
+        textFieldsStack.spacing = 15
         
         emailTextField.backgroundColor = .black
-        emailTextField.text = "e-mail"
         emailTextField.textColor = .white
         emailTextField.clearsOnBeginEditing = true
+        emailTextField.attributedPlaceholder = NSAttributedString(
+            string: "e-mail",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+        )
+        emailTextField.textAlignment = .center
         
         passwordTextField.backgroundColor = .black
-        passwordTextField.text = "password"
         passwordTextField.textColor = .white
         passwordTextField.clearsOnBeginEditing = true
+        passwordTextField.attributedPlaceholder = NSAttributedString(
+            string: "password",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+        )
+        passwordTextField.textAlignment = .center
         
         loginButton.setTitle("SIGN IN", for: .normal)
-        loginButton.setTitleColor(.black, for: .normal)
+        loginButton.setTitleColor(.white, for: .normal)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        loginButton.backgroundColor = .black
         loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
     }
     
@@ -95,10 +104,10 @@ class LoginViewController: UIViewController {
             textFieldsStack.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
             textFieldsStack.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 50),
             textFieldsStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
-            textFieldsStack.widthAnchor.constraint(equalToConstant: 200),
+            textFieldsStack.widthAnchor.constraint(lessThanOrEqualToConstant: backgroundView.frame.width * 0.8),
             
             loginButton.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            loginButton.topAnchor.constraint(equalTo: textFieldsStack.bottomAnchor, constant: 50),
+            loginButton.topAnchor.constraint(equalTo: textFieldsStack.bottomAnchor, constant: 100),
             loginButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 25),
             loginButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 75)
         ])
@@ -124,15 +133,15 @@ class LoginViewController: UIViewController {
     @objc func loginButtonPressed() {
         
         self.firebaseAuthManagerDelegate?.login(loginEmail: emailTextField.text ?? "",
-                                                loginPassword: passwordTextField.text ?? "") { result, error in
+                                                loginPassword: passwordTextField.text ?? "") { [weak self] (result, error) in
             if error != nil {
                 print("LOGIN ERROR")
-                self.invokeErrorAlert()
+                self?.invokeErrorAlert()
             } else {
                 print("Logged in sucessfully")
                 let newVC = EmployeeMainViewController()
                 newVC.modalPresentationStyle = .fullScreen
-                self.present(newVC, animated: true, completion: nil)
+                self?.present(newVC, animated: true, completion: nil)
 
             }
         }
